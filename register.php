@@ -24,7 +24,7 @@ $username = $_POST['username'];
 $email = $_POST['email'];
 $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Encrypt password
 if ($stmt->execute()) {
-    echo "New record created successfully";
+    echo "Вие се регистрирахте успешно.";
 } else {
     echo "Error: " . $stmt->error;
 }
