@@ -30,13 +30,16 @@ if ($stmt->num_rows > 0) {
     
     // Verify the password
     if (password_verify($_POST['password'], $hashed_password)) {
-        echo "Успешен вход!";
-        // Start session or redirect user to another page as needed
+        header("refresh:1;url=homepage.html");
+        exit();
     } else {
-        echo "Грешна парола!";
+        echo "Грешна парола! Моля опитай пак.";
+        header("refresh:2;url=login.html");
+        exit();
     }
 } else {
-    echo "Потребителят не е намерен.";
+    echo "Потребителят не е намерен. Моля опитай пак.";
+    header("refresh:2;url=login.html");
 }
 
 $stmt->close();
