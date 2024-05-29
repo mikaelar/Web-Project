@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрационна форма</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style_login.css">
 </head>
 <body>
     <h2>Регистрация</h2>
@@ -18,10 +18,14 @@
         <label for="password">Парола:</label>
         <input type="password" name="password" required>
 
-        <label for="password">Потвърдете паролата:</label>
-        <input type="password" name="password" required>
+        <label for="confirm_password">Потвърдете паролата:</label>
+        <input type="password" name="confirm_password" required>
 
         <button type="submit">Регистрирай ме!</button>
     </form>
+    
+    <p>Забравена парола? <a href="change_password.html">Влезте тук</a></p>
+    <p>Вече сте регистриран? <a href="login.html">Влезте тук</a></p>
 </body>
 </html>
+
