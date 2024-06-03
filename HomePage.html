@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Requirements Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Стилове за картинките */
+        .user-story-images {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .user-story-images img {
+            width: 30%; /* Подходяща ширина за по-добро разпределение */
+            border-radius: 10px; /* Закръгленост на краищата за по-добър вид */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Сянка за по-добър ефект */
+            transition: transform 0.3s ease; /* Плавна анимация при ховър */
+        }
+
+        .user-story-images img:hover {
+            transform: scale(1.1); /* Увеличаване на размера при ховър */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="HomePage.html">Home</a></li>
+                <li><a href="add-project.html">Add Project</a></li>
+                <li><a href="Projects.html" target="_blank">Projects</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="UserStories.html">Manage User Stories</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <span id="username">Username</span>
+            <button id="helpButton">Help</button>
+            <button id="logoutButton" onclick="location.href='login.html';">Logout</button>
+        </div>
+    </header>
+    <main>
+        <section id="home">
+            <h2>Welcome to the Software Requirements Management Tool</h2>
+            <p>Manage your software projects efficiently with our tool. Get started by adding a new project, opening an existing one, or uploading photos and descriptions for your projects.</p>
+        </section>
+        
+        <!-- Добавяне на картинки -->
+        <div class="user-story-images">
+            <img src="2.jpg" alt="Image 1">
+            <img src="OIP.jpg" alt="Image 2">
+            <img src="1.jpg" alt="Image 3">
+        </div>
+
+    </main>
+    <footer>
+        <p>&copy; 2024 Software Requirements Management</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
