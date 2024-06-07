@@ -16,6 +16,10 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         array (
             'Tests\\' => 6,
         ),
+        'R' => 
+        array (
+            'Requirement\\' => 12,
+        ),
         'P' => 
         array (
             'PhpParser\\' => 10,
@@ -34,6 +38,10 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         'Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
+        ),
+        'Requirement\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/requirement',
         ),
         'PhpParser\\' => 
         array (
