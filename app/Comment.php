@@ -1,5 +1,7 @@
 <?php
 namespace App;
+use InvalidArgumentException;
+use DomainException;
 
 class Comment {
     function __construct($id, $author, $date, $content)
@@ -31,27 +33,32 @@ class Comment {
         return $this->content;
     }
 
-    public function __equals($other)
+    public function equals($other)
     {
-        return $other->getID() === $this->id;
+        if ($other === null)
+            return false;
+        elseif (!$other instanceof Comment)
+            return false;
+        else
+            return $other->getID() === $this->id;
     }
 
-    private static $FIELD_INVALID_MESSAGE = 'Field %s of Comment class cannot be %s!';
-    private static $EMPTY_STRING = "";
+    public static $FIELD_INVALID_MESSAGE = 'Field %s of Comment class cannot be %s!';
+    public static $EMPTY_STRING = "";
 
     private function setID($id)
     {
         if ($id === null)
-            throw new Exception(sprintf(Comment::$FIELD_INVALID_MESSAGE, "id", "null"), 1);
+            throw new InvalidArgumentException(sprintf(Comment::$FIELD_INVALID_MESSAGE, "id", "null"), 1);
         $this->id = $id;
     }
 
     private function setAuthor($author)
     {
         if ($author === null)
-            throw new Exception(sprintf(Comment::$FIELD_INVALID_MESSAGE, "author", "null"), 1);
+            throw new InvalidArgumentException(sprintf(Comment::$FIELD_INVALID_MESSAGE, "author", "null"), 1);
         if ($author === Comment::$EMPTY_STRING)
-            throw new Exception(sprintf(Comment::$FIELD_INVALID_MESSAGE, "author", "empty"), 2);
+            throw new DomainException(sprintf(Comment::$FIELD_INVALID_MESSAGE, "author", "empty"), 2);
         $this->author = $author;
     }
 
@@ -59,16 +66,16 @@ class Comment {
     {
         // it should be checked that it is valid beforehand! - our class Date will just wrap some functionalities of the PHP date
         if ($date === null)
-            throw new Exception(sprintf(Comment::$FIELD_INVALID_MESSAGE, "date", "null"), 1);
+            throw new InvalidArgumentException(sprintf(Comment::$FIELD_INVALID_MESSAGE, "date", "null"), 1);
         $this->date = $date;
     }
 
     private function setContent($content)
     {
         if ($content === null)
-            throw new Exception(sprintf(Comment::$FIELD_INVALID_MESSAGE, "content", "null"), 1);
+            throw new InvalidArgumentException(sprintf(Comment::$FIELD_INVALID_MESSAGE, "content", "null"), 1);
         if ($content === Comment::$EMPTY_STRING)
-            throw new Exception(sprintf(Comment::$FIELD_INVALID_MESSAGE, "content", "empty"), 2);
+            throw new DomainException(sprintf(Comment::$FIELD_INVALID_MESSAGE, "content", "empty"), 2);
         $this->content = $content;
     }
 
