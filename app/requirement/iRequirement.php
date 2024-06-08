@@ -17,23 +17,23 @@ interface iRequirement {
     // public function unlinkUserStory(UserStory&);
 
     public function addComment($id, $author, $date, $content);
-    public function removeComment($comment);
-    public function appendComment($comment);
+    public function removeComment(& $comment);
+    public function appendComment(& $comment);
     public function clearComments();
 
-    public function markRequirementsToDependOn($requirement, $impactCoefficient);
-    public function changeImpactCoefficientOnDependantRequirement($requirement, $newDependancyCoefficient);
-    public function unmarkRequirementsToDependOn($requirement);
+    public function markRequirementsToDependOn(& $requirement, $impactCoefficient);
+    public function changeImpactCoefficientOnDependantRequirement(& $requirement, $newDependancyCoefficient);
+    public function unmarkRequirementsToDependOn(& $requirement);
     public function clearDependanciesOnOtherRequirements();
 
-    public function addDependantRequirement($requirement, $impactCoefficient);
-    public function changeImpactCoefficientOnDependantOnThisRequirement($requirement, $newDependancyCoefficient);
-    public function removeDependancyToRequirement($requirement);
-    public function clearDependanciesOnThisRequirement();
+    public function addDependantRequirement(& $requirement, $impactCoefficient);
+    public function changeImpactCoefficientOnDependantOnThisRequirement(& $requirement, $newDependancyCoefficient);
+    public function removeDependancyToRequirement(& $requirement);
+    public function clearDependanciesBasedOnThisRequirement();
 
-    public function appendSubrequirement($requirement);
-    public function addSubrequirement($id, $heading, $author, $content, $priority);
-    public function removeSubrequirement($requirement);
+    public function appendSubrequirement(& $requirement);
+    public function addSubrequirement($id, $heading, $content, $priority);
+    public function removeSubrequirement(& $requirement);
     public function clearSubrequirements();
 }
 ?>

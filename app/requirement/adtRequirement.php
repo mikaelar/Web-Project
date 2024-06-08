@@ -232,8 +232,34 @@ abstract class adtRequirement implements iRequirement
     }
 
     // TODO For subrequirements (like comments and unit test) - also implement a custom comparator, for which the updating to take place 
+    public function appendSubrequirement($requirement)
+    {
+        // check if the appending is vialbe to achieve, so this is 100 % of subrequirement (no cycle is possible)
+        // DFS $requirements subrequirements to check if current is among them
+        $isOtherAlreadyAnAscendantToCurrent = self::isRequirementAnDescendantOfAnother($requirement, $this);
+        if (!$isOtherAlreadyAnAscendantToCurrent)
+            $this->subrequirements[] = $requirement;
+    }
+    public function addSubrequirement($id, $heading, $content, $priority)
+    {
+        // this will throw, we need a subtype or to remove this function (OR implement Builder pattern)
+        $requirement = new adtRequirement($id, $heading, $author, $content);
+        $this->appendSubrequirement($requirement);
+    }
+    public function removeSubrequirement($requirement)
+    {
+        // will be used to only remove requirements from one layer below (direct descendants) - can be remade to remove descendands recursively
+    }
+    public function clearSubrequirements()
+    {
+        $this->$subrequirements = [];
+    }
     
-    
+    public function equals($other) // can be remade
+    {
+        return $this->id === $other->getID();
+    }
+
     protected $id;
     protected $heading;
     protected $description;
@@ -325,6 +351,24 @@ abstract class adtRequirement implements iRequirement
                 return true;
         }
         return false;
+    }
+
+    private static function isRequirementAnDescendantOfAnother($possibleParent, $possibleChild)
+    {
+        if ($possibleParent->equals($possibleChild)) // if the current parent is the searched Child
+            return true;
+        $children = $possibleParent->getSubrequirements(); // if the current element has no more children, stop traversing
+        if (count($children) === 0)
+            return false;
+
+        // if children are available, check them recursively by DFSing // check if cycle will exists - no cycles can be created
+        foreach ($children as $child)
+        {
+            $isSubChild = self::isRequirementAnDescendantOfAnother($child, $possibleChild);
+            if ($isSubChild)
+                return true;
+        }
+
     }
 }
 
