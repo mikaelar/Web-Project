@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project - Software Requirements Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="HomePage.html">Home</a></li>
+                <li><a href="add-project.html">Add Project</a></li>
+                <li><a href="Projects.html" target="_blank">Projects</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="UserStories.html">Manage User Stories</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <span id="username">Username</span>
+            <button id="helpButton">Help</button>
+            <button id="logoutButton" onclick="location.href='login.html';">Logout</button>
+        </div>
+    </header>
+    <main>
+        <section id="add-project">
+            <h2>Add Project</h2>
+            <form id="addProjectForm">
+                <label for="projectName">Project Name:</label>
+                <input type="text" id="projectName" name="projectName" required>
+                <label for="projectDescription">Project Description:</label>
+                <textarea id="projectDescription" name="projectDescription" required></textarea>
+                <button type="submit">Add Project</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Software Requirements Management</p>
+    </footer>
+    <script src="project-script.js"></script>
+</body>
+</html>
