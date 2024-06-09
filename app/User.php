@@ -6,6 +6,7 @@ class User {
     private $username;
     private $email;
     private $password;
+    private $authenticated = false;
 
     public function __construct($db) {
         $this->conn = $db->getConnection();
@@ -48,8 +49,9 @@ class User {
             $stmt->fetch();
 
             if (password_verify($password, $hashed_password)) {
-                echo "Успешен вход.";
-                header("refresh:1;url=../homepage.html");
+                $this->authenticated = true;
+                $_SESSION['username'] = $username;
+                header("refresh:1;url=../manage_homepage/homepage.php");
                 exit();
             } else {
                 echo "Грешна парола! Моля опитай пак.";
@@ -62,6 +64,10 @@ class User {
         }
 
         $stmt->close();
+    }
+
+    public function isAuthenticated() {
+        return $this->authenticated;
     }
 
     public function changePassword($current_password, $new_password) {

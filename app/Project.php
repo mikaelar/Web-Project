@@ -24,14 +24,13 @@ class Project {
         $stmt->bind_param("ssss", $this->name, $this->description, $this->collaborators, $this->initial_requirements);
 
         if ($stmt->execute()) {
-            echo "Нов проект е създаден успешно.";
-            header("refresh:2;url=../homepage.html");
+            $stmt->close();
+            return true;
         } else {
             echo "Error: " . $stmt->error;
-            header("refresh:2;url=create_project/create_project.html");
+            $stmt->close();
+            return false;
         }
-
-        $stmt->close();
     }
 }
 ?>
