@@ -4,6 +4,7 @@ namespace App\Requirement;
 use App\Requirement\iRequirement;
 use App\Comment;
 use App\Priority;
+use InvalidArgumentException;
 
 abstract class adtRequirement implements iRequirement
 {
@@ -14,10 +15,10 @@ abstract class adtRequirement implements iRequirement
         $this->setDescription($description);
         $this->setPriority($priority);
         // TODO - add a lazy initialization for the collections part - depending on how DB communication works
-        $this->$comments = []; // array of comments
-        $this->$dependsOnRequirements = self::generatePriorityCollection(); // array of priorities, which have arrays of requirements
-        $this->$impactsRequirements = self::generatePriorityCollection(); // array of priorities, which have arrays of requirements
-        $this->$subrequirements = [];
+        $this->comments = []; // array of comments
+        $this->dependsOnRequirements = self::generatePriorityCollection(); // array of priorities, which have arrays of requirements
+        $this->impactsRequirements = self::generatePriorityCollection(); // array of priorities, which have arrays of requirements
+        $this->subrequirements = [];
     }
 
     public function getID()
@@ -40,6 +41,7 @@ abstract class adtRequirement implements iRequirement
         return $this->priority;
     }
 
+    // maybe forbid these fields from getting extracted
     public function getComments()
     {
         return $this->comments;
@@ -62,7 +64,7 @@ abstract class adtRequirement implements iRequirement
 
 
     private const FIELD_INVALID_MESSAGE = 'Field %s of adtRequirement class cannot be %s!';
-    private const EMPTY_STRING = "";
+    public const EMPTY_STRING = "";
     private const INVALID_PRIORITY_MESSAGE = 'Value %s provided to field %s of adtRequirement class is invalid! Valid values are {%s} or null';
     public const ALLOWED_PRIORITY_VALUES = ["crucial", "high", "medium", "low"];
     public const ENCODING = 'UTF-8';
@@ -73,7 +75,7 @@ abstract class adtRequirement implements iRequirement
     private function setID($id)
     {
         if ($id === null)
-            throw new Exception(sprintf(self::$FIELD_INVALID_MESSAGE, "id", "null"), 1);
+            throw new \InvalidArgumentException(sprintf(self::FIELD_INVALID_MESSAGE, "id", "null"), 1);
         $this->id = $id;
     }
 
@@ -86,21 +88,16 @@ abstract class adtRequirement implements iRequirement
 
     public function setDescription($description)
     {
-        if ($heading === self::EMPTY_STRING)
-            $heading = null;
+        if ($description === self::EMPTY_STRING)
+            $description = null;
         $this->description = $description;
     }
 
     // set the priority to an enum value or null, depending on the execution
-    public function setPrioirity($priority)
+    public function setPriority($priority)
     {
+        // if the priority is not empty and it is different from the valid available ones, then throw
         $priority = self::convertPriorityStringToObject($priority);
-         // if the priority is not empty and it is different from the valid available ones, then throw
-        if ($priority !== null && !in_array($priority, adtRequirement::$ALLOWED_PRIORITY_VALUES, true)) 
-        {
-            
-        }
-
         $this->priority = $priority; // it is either enum or null
     }
 
@@ -119,8 +116,6 @@ abstract class adtRequirement implements iRequirement
     // {
     // }
 
-    // TODO implement basic private functions to cover the collections
-
     public function appendComment(&$comment)
     {
         $this->comments[] = $comment;
@@ -133,7 +128,7 @@ abstract class adtRequirement implements iRequirement
         $this->appendComment($comment);
     }
 
-    public function removeComment($comment)
+    public function removeComment(& $comment)
     {
         self::removeElementFromArray($this->comments, $comment);
     }
@@ -163,7 +158,7 @@ abstract class adtRequirement implements iRequirement
         // other req list is automatically updated by the other two functions
     }
 
-    public function unmarkRequirementToDependOn(&$requirement, $isInitiator)
+    public function &unmarkRequirementToDependOn(&$requirement, $isInitiator)
     {
         $hasBeenRemoved = self::removeElementFrom2DArray($this->dependsOnRequirements, $requirement);
 
@@ -231,8 +226,7 @@ abstract class adtRequirement implements iRequirement
         $this->impactsRequirements = self::generatePriorityCollection(); // reset the current list
     }
 
-    // TODO For subrequirements (like comments and unit test) - also implement a custom comparator, for which the updating to take place 
-    public function appendSubrequirement($requirement)
+    public function appendSubrequirement(& $requirement)
     {
         // check if the appending is vialbe to achieve, so this is 100 % of subrequirement (no cycle is possible)
         // DFS $requirements subrequirements to check if current is among them
@@ -246,7 +240,7 @@ abstract class adtRequirement implements iRequirement
         $requirement = new adtRequirement($id, $heading, $author, $content);
         $this->appendSubrequirement($requirement);
     }
-    public function removeSubrequirement($requirement)
+    public function &removeSubrequirement(& $requirement)
     {
         // will be used to only remove requirements from one layer below (direct descendants) - can be remade to remove descendands recursively
     }
@@ -259,6 +253,7 @@ abstract class adtRequirement implements iRequirement
     {
         return $this->id === $other->getID();
     }
+
 
     protected $id;
     protected $heading;
@@ -279,6 +274,7 @@ abstract class adtRequirement implements iRequirement
         $convertedPriority = mb_strtolower($priority, self::ENCODING);
         switch ($convertedPriority)
         {
+            // TODO ADD bg text cases? 
             case "crucial":
                 return Priority::Crucial;
             case "high":
@@ -288,8 +284,8 @@ abstract class adtRequirement implements iRequirement
             case "low":
                 return Priority::Low;
             default:
-                $validValues = implode(", ", self::$ALLOWED_PRIORITY_VALUES);
-                throw new Exception(sprintf(self::$INVALID_PRIORITY_MESSAGE, $priority, "priority", $validValues), 1);
+                $validValues = implode(", ", self::ALLOWED_PRIORITY_VALUES);
+                throw new \InvalidArgumentException(sprintf(self::INVALID_PRIORITY_MESSAGE, $priority, "priority", $validValues), 1);
         }
     }
 

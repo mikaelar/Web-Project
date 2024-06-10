@@ -21,19 +21,19 @@ interface iRequirement {
     public function appendComment(& $comment);
     public function clearComments();
 
-    public function markRequirementsToDependOn(& $requirement, $impactCoefficient);
-    public function changeImpactCoefficientOnDependantRequirement(& $requirement, $newDependancyCoefficient);
-    public function unmarkRequirementsToDependOn(& $requirement);
-    public function clearDependanciesOnOtherRequirements();
+    public function markRequirementToDependOn(& $requirement, $impactCoefficient, $isInitiator);
+    public function changeImpactCoefficientOnDependantRequirement(& $requirement, $newDependancyCoefficient, $isInitiator);
+    public function &unmarkRequirementToDependOn(& $requirement, $isInitiator);
+    public function clearDependanciesWhichThisRequirementLiesUpon();
 
-    public function addDependantRequirement(& $requirement, $impactCoefficient);
-    public function changeImpactCoefficientOnDependantOnThisRequirement(& $requirement, $newDependancyCoefficient);
-    public function removeDependancyToRequirement(& $requirement);
+    public function addDependantRequirement(& $requirement, $impactCoefficient, $isInitiator);
+    public function changeImpactCoefficientOnDependantOnThisRequirement(& $requirement, $newDependancyCoefficient, $isInitiator);
+    public function removeDependancyToRequirement(& $requirement, $isInitiator);
     public function clearDependanciesBasedOnThisRequirement();
 
     public function appendSubrequirement(& $requirement);
     public function addSubrequirement($id, $heading, $content, $priority);
-    public function removeSubrequirement(& $requirement);
+    public function &removeSubrequirement(& $requirement);
     public function clearSubrequirements();
 }
 ?>
