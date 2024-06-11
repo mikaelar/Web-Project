@@ -1,0 +1,27 @@
+/* Стилове за таблицата */
+#project-list {
+    width: 80%; /* Задава ширина на таблицата */
+    margin: 0 auto; /* Центрира таблицата хоризонтално */
+    border-collapse: collapse; /* Обединява границите на клетките */
+}
+
+.project {
+    border: 1px solid #ddd; /* Граница на всеки ред */
+}
+
+.project h3, .project p {
+    padding: 10px; /* Подравнява текста във всяка клетка */
+    margin: 0; /* Изтрива външния отстъп */
+}
+
+.project button {
+    padding: 8px 16px; /* Задава големина на бутона */
+    background-color: #4CAF50; /* Задава цвят на фона на бутона */
+    color: white; /* Задава цвят на текста на бутона */
+    border: none; /* Премахва границата на бутона */
+    cursor: pointer; /* Задава курсора при хоvър */
+}
+
+.project button:hover {
+    background-color: #45a049; /* Променя цвета на фона при ховър */
+}

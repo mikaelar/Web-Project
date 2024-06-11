@@ -7,8 +7,14 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Tests\\' => array($baseDir . '/tests'),
+    'Scripts\\' => array($baseDir . '/scripts'),
     'Requirement\\' => array($baseDir . '/requirement'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'Manage-Homepage\\' => array($baseDir . '/manage_homepage'),
+    'Login_Register\\' => array($baseDir . '/login_register'),
+    'Frontend\\' => array($baseDir . '/frontend'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'Classes\\' => array($baseDir . '/classes'),
+    'Backend\\' => array($baseDir . '/backend'),
     'App\\' => array($baseDir . '/app'),
 );
