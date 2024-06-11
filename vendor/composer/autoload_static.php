@@ -16,6 +16,10 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         array (
             'Tests\\' => 6,
         ),
+        'S' => 
+        array (
+            'Scripts\\' => 8,
+        ),
         'R' => 
         array (
             'Requirement\\' => 12,
@@ -24,9 +28,29 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         array (
             'PhpParser\\' => 10,
         ),
+        'M' => 
+        array (
+            'Manage-Homepage\\' => 16,
+        ),
+        'L' => 
+        array (
+            'Login_Register\\' => 15,
+        ),
+        'F' => 
+        array (
+            'Frontend\\' => 9,
+        ),
         'D' => 
         array (
             'DeepCopy\\' => 9,
+        ),
+        'C' => 
+        array (
+            'Classes\\' => 8,
+        ),
+        'B' => 
+        array (
+            'Backend\\' => 8,
         ),
         'A' => 
         array (
@@ -39,6 +63,10 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
+        'Scripts\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/scripts',
+        ),
         'Requirement\\' => 
         array (
             0 => __DIR__ . '/../..' . '/requirement',
@@ -47,9 +75,29 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
+        'Manage-Homepage\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/manage_homepage',
+        ),
+        'Login_Register\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/login_register',
+        ),
+        'Frontend\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/frontend',
+        ),
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'Classes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/classes',
+        ),
+        'Backend\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/backend',
         ),
         'App\\' => 
         array (

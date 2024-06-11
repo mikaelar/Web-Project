@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage User Stories - Software Requirements Management</title>
+    <link rel="stylesheet" href="styles_user_stories.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../manage_homepage/homepage.php">Home</a></li>
+                <li><a href="../create_project/create_project.html">Add Project</a></li>
+                <li><a href="../projects/projects.html" target="_blank">Projects</a></li>
+                <li><a href="../settings/settings.html">Settings</a></li>
+                <li><a href="userStories.html">Manage User Stories</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <span id="username">Username</span>
+            <button id="helpButton">Help</button>
+            <button id="logoutButton" onclick="location.href='../login_register/login.html';">Logout</button>
+        </div>
+    </header>
+    <main>
+        <section id="manage-user-stories">
+            <h2>Manage User Stories</h2>
+            <form method="POST" action="../../backend/scripts/userStories.php">
+                <h3>Add User Story</h3>
+                <label for="userStoryTitle">Title:</label>
+                <input type="text" id="userStoryTitle" name="userStoryTitle" required>
+                <label for="userStoryDescription">Description:</label>
+                <textarea id="userStoryDescription" name="userStoryDescription" required></textarea>
+                <button type="submit">Add User Story</button>
+            </form>
+        
+            <form id="editUserStoryForm">
+                <h3>Edit User Story</h3>
+                <label for="editUserStorySelect">Select User Story:</label>
+                <select id="editUserStorySelect" name="editUserStorySelect" required>
+                    <!-- User Story options will be populated here -->
+                </select>
+                <label for="editUserStoryTitle">New Title:</label>
+                <input type="text" id="editUserStoryTitle" name="editUserStoryTitle" required>
+                <label for="editUserStoryDescription">New Description:</label>
+                <textarea id="editUserStoryDescription" name="editUserStoryDescription" required></textarea>
+                <button type="submit">Edit User Story</button>
+            </form>
+            <form id="removeUserStoryForm">
+                <h3>Remove User Story</h3>
+                <label for="removeUserStorySelect">Select User Story:</label>
+                <select id="removeUserStorySelect" name="removeUserStorySelect" required>
+                    <!-- User Story options will be populated here -->
+                </select>
+                <button type="submit">Remove User Story</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Software Requirements Management</p>
+    </footer>
+</body>
+</html>

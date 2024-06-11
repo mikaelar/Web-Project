@@ -4,9 +4,15 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
             "Tests\\": "tests/",
-            "Requirement\\": "requirement/"
+            "App\\": "app/",
+            "Backend\\": "backend/",
+            "Classes\\": "classes/",
+            "Requirement\\": "requirement/",
+            "Scripts\\": "scripts/",
+            "Login_Register\\": "login_register/",
+            "Frontend\\": "frontend/",
+            "Manage-Homepage\\": "manage_homepage/"
         }
     }
 }

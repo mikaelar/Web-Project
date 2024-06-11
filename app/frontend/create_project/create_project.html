@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Project</title>
+    <link rel="stylesheet" href="create_project.css">
+</head>
+<body>
+    <form action="../../backend/scripts/create_project.php" method="POST">
+        <h2>Създаване на проект</h2>
+        <label for="name">Име на проекта:</label>
+        <input type="text" name="name" required>
+        
+        <label for="description">Кратко описание:</label>
+        <textarea name="description" required></textarea>
+        
+        <label for="collaborators">Колаборатори:</label>
+        <input type="text" name="collaborators" required>
+        
+        <label for="initial_requirements">Изисквания:</label>
+        <textarea name="initial_requirements" required></textarea>
+        
+        <button type="submit">Създай</button>
+    </form>
+</body>
+</html>
