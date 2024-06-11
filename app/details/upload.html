@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photos - Software Requirements Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../manage_homepage/homepage.php">Home</a></li>
+                <li><a href="../create_project/create_project.html">Add Project</a></li>
+                <li><a href="../projects/Projects.html">Projects</a></li>
+                <li><a href="../settings/settings.html">Settings</a></li>
+                <li><a href="../user_stories/UserStories.html">Manage User Stories</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <span id="username">Username</span>
+            <button id="helpButton">Help</button>
+            <button id="logoutButton" onclick="location.href='login.html';">Logout</button>
+        </div>
+    </header>
+    <main>
+        <section id="upload">
+            <h2>Upload Photos</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <label for="photoUpload">Choose Photo:</label>
+                <input type="file" id="photoUpload" name="photoUpload" accept="image/*" required>
+                <button type="submit">Upload Photo</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Software Requirements Management</p>
+    </footer>
+    <script src="upload-script.js"></script>
+</body>
+</html>
