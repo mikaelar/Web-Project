@@ -41,7 +41,7 @@ abstract class adtRequirement implements iRequirement
         return $this->priority;
     }
 
-    // maybe forbid these fields from getting extracted
+    // maybe forbid these fields from getting extracted (now they are returned as copies, note that (but the objects inside are refs))
     public function getComments()
     {
         return $this->comments;
@@ -151,14 +151,14 @@ abstract class adtRequirement implements iRequirement
     }
 
 
-    public function changeImpactCoefficientOnDependantRequirement(&$requirement, $impactCoefficient, $isInitiator)
+    public function changeImpactCoefficientOnDependantRequirement(&$requirement, $impactCoefficient)
     {
-        $this->unmarkRequirementToDependOn($requirement);
-        $this->markRequirementToDependOn($requirement, $impactCoefficient);
+        $this->unmarkRequirementToDependOn($requirement, true);
+        $this->markRequirementToDependOn($requirement, $impactCoefficient, true);
         // other req list is automatically updated by the other two functions
     }
 
-    public function &unmarkRequirementToDependOn(&$requirement, $isInitiator)
+    public function unmarkRequirementToDependOn(&$requirement, $isInitiator)
     {
         $hasBeenRemoved = self::removeElementFrom2DArray($this->dependsOnRequirements, $requirement);
 
@@ -196,7 +196,7 @@ abstract class adtRequirement implements iRequirement
     }
 
 
-    public function changeImpactCoefficientOnDependantOnThisRequirement(&$requirement, $impactCoefficient, $isInitiator)
+    public function changeImpactCoefficientOnDependantOnThisRequirement(&$requirement, $impactCoefficient)
     {
         $this->removeDependancyToRequirement($requirement, true);
         $this->addDependantRequirement($requirement, $impactCoefficient, true);
@@ -231,26 +231,39 @@ abstract class adtRequirement implements iRequirement
         // check if the appending is vialbe to achieve, so this is 100 % of subrequirement (no cycle is possible)
         // DFS $requirements subrequirements to check if current is among them
         $isOtherAlreadyAnAscendantToCurrent = self::isRequirementAnDescendantOfAnother($requirement, $this);
-        if (!$isOtherAlreadyAnAscendantToCurrent)
+        $isOtherAlreadyAppendedAsSubrequirement = self::isRequirementAnDescendantOfAnother($this, $requirement);
+        if (!$isOtherAlreadyAnAscendantToCurrent && ! $isOtherAlreadyAppendedAsSubrequirement)
+        {
             $this->subrequirements[] = $requirement;
+            return true;
+        }
+        return false;
     }
-    public function addSubrequirement($id, $heading, $content, $priority)
+
+    // Needs to be redefined in each subtype of requirement (Note - currently we can construct chains of single type - functional with functional or non-functional with non-functional)
+    public abstract function addSubrequirement($id, $heading, $content, $priority);
+
+    public function removeSubrequirement(& $requirement)
     {
-        // this will throw, we need a subtype or to remove this function (OR implement Builder pattern)
-        $requirement = new adtRequirement($id, $heading, $author, $content);
-        $this->appendSubrequirement($requirement);
+        if ($this->equals($requirement)) // you cannot remove a subrequirement by removing yourself
+            return false;
+
+        $isOtherAnDescendant = self::isRequirementAnDescendantOfAnother($this, $requirement);
+        if (!$isOtherAnDescendant)
+            return false;
+        // it removes descendandts recursively
+        $this->removeSubrequirementRecursively($requirement);
+        return true;
     }
-    public function &removeSubrequirement(& $requirement)
-    {
-        // will be used to only remove requirements from one layer below (direct descendants) - can be remade to remove descendands recursively
-    }
+
     public function clearSubrequirements()
     {
-        $this->$subrequirements = [];
+        $this->subrequirements = []; // clear only first row subrequirements
     }
     
     public function equals($other) // can be remade
     {
+        // check also the obj type
         return $this->id === $other->getID();
     }
 
@@ -291,21 +304,21 @@ abstract class adtRequirement implements iRequirement
 
     private static function convertPriorityObjectToValue($priorityObj)
     {
-        if ($priority === self::EMPTY_STRING || $priority === null || !is_object($priority))
-            return null;
+        if ($priorityObj === adtRequirement::EMPTY_STRING || !is_object($priorityObj))
+            $priorityObj = null;
 
         switch ($priorityObj)
         {
             case Priority::Crucial;
-                return 0;
-            case Priority::High;
                 return 1;
-            case Priority::Medium:
+            case Priority::High;
                 return 2;
-            case Priority::Low:
+            case Priority::Medium:
                 return 3;
-            default:
+            case Priority::Low:
                 return 4;
+            default:
+                return 5;
         }
     }
 
@@ -323,7 +336,7 @@ abstract class adtRequirement implements iRequirement
     private static function removeElementFromArray(& $collection, & $elementToRemove)
     {
         $elementsCount = count($collection);
-        for ($i = 0; i < $elementsCount; $i++)
+        for ($i = 0; $i < $elementsCount; $i++)
         {
             if ($collection[$i]->equals($elementToRemove))
             {
@@ -339,11 +352,10 @@ abstract class adtRequirement implements iRequirement
     private static function removeElementFrom2DArray(& $collection, & $elementToRemove)
     {
         $subcategoiesCount = count($collection);
-        for ($i = 0; i < $subcategoiesCount; $i++)
+        for ($i = 0; $i < $subcategoiesCount; $i++)
         {
-            // collection is array of arrays, collection[i] is an array
-            $hasBeenRemoved = self::removeElementFromArray($collection[$i], $elementToRemove);
-            if ($hasBeenRemoved)
+            $isFound = self::removeElementFromArray($collection[$i], $elementToRemove);
+            if ($isFound)
                 return true;
         }
         return false;
@@ -364,7 +376,39 @@ abstract class adtRequirement implements iRequirement
             if ($isSubChild)
                 return true;
         }
+    }
 
+    // it is guaranteed that the requirement is present
+    private function removeSubrequirementRecursively(& $searchedChild)
+    {
+        // NOTE - a requirement is not a subrequirement of itself!
+
+        $children = $this->getSubrequirements(); // if the current element has no more children, stop traversing
+        if (count($children) === 0)
+            return false;
+
+        // it will tell us if a subrequirement has been matched and we can also update the children tree
+        $isFound = self::removeElementFromArray($children, $searchedChild);
+        if ($isFound) {
+            $this->setSubRequirements($children);
+            return true;
+        }
+
+        // if children are available, check them recursively by DFSing // check if cycle will exists - no cycles can be created
+        foreach ($children as $child)
+        {
+            $isFound = $child->removeSubrequirementRecursively($searchedChild);
+            if ($isFound)
+                break;
+        }
+
+        return $isFound;
+    }
+
+    // will be used by removeSubrequirements to keep encapsulation and update the requirement object's subrequirements array
+    private function setSubRequirements($subrequirements)
+    {
+        $this->subrequirements = $subrequirements;
     }
 }
 

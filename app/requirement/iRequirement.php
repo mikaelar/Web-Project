@@ -22,18 +22,18 @@ interface iRequirement {
     public function clearComments();
 
     public function markRequirementToDependOn(& $requirement, $impactCoefficient, $isInitiator);
-    public function changeImpactCoefficientOnDependantRequirement(& $requirement, $newDependancyCoefficient, $isInitiator);
-    public function &unmarkRequirementToDependOn(& $requirement, $isInitiator);
+    public function changeImpactCoefficientOnDependantRequirement(& $requirement, $newDependancyCoefficient);
+    public function unmarkRequirementToDependOn(& $requirement, $isInitiator);
     public function clearDependanciesWhichThisRequirementLiesUpon();
 
     public function addDependantRequirement(& $requirement, $impactCoefficient, $isInitiator);
-    public function changeImpactCoefficientOnDependantOnThisRequirement(& $requirement, $newDependancyCoefficient, $isInitiator);
+    public function changeImpactCoefficientOnDependantOnThisRequirement(& $requirement, $newDependancyCoefficient);
     public function removeDependancyToRequirement(& $requirement, $isInitiator);
     public function clearDependanciesBasedOnThisRequirement();
 
     public function appendSubrequirement(& $requirement);
     public function addSubrequirement($id, $heading, $content, $priority);
-    public function &removeSubrequirement(& $requirement);
+    public function removeSubrequirement(& $requirement);
     public function clearSubrequirements();
 }
 ?>

@@ -8,5 +8,11 @@ class FunctionalRequirement extends adtRequirement
     {
         parent::__construct($id, $heading, $description, $priority);
     }
+
+    public function addSubrequirement($id, $heading, $description, $priority)
+    {
+        $requirement = new FunctionalRequirement($id, $heading, $description, $priority);
+        $this->appendSubrequirement($requirement);
+    }
 }
 ?>
