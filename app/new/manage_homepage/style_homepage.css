@@ -1,0 +1,211 @@
+/* Create Project CSS */
+  /* Стилове за картинките */
+  .user-story-images {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.user-story-images img {
+    width: 30%; /* Подходяща ширина за по-добро разпределение */
+    border-radius: 10px; /* Закръгленост на краищата за по-добър вид */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Сянка за по-добър ефект */
+    transition: transform 0.3s ease; /* Плавна анимация при ховър */
+}
+
+.user-story-images img:hover {
+    transform: scale(1.1); /* Увеличаване на размера при ховър */
+}
+
+/* Стилове за нотификационния бутон и падащото меню */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.header-left,
+.header-center,
+.header-right {
+    flex: 1;
+}
+
+.header-center ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+.header-center ul li {
+    margin-right: 20px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.header-right .notifications {
+    margin-right: 20px;
+}
+
+.notifications {
+    position: relative;
+    display: inline-block;
+}
+
+#notificationButton {
+    background-color: #f8f9fa;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#notificationList {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    min-width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    top: 35px;
+    right: 0;
+}
+
+#notificationList ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#notificationList li {
+    padding: 5px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+#notificationList li:last-child {
+    border-bottom: none;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #d6f5d6;  /* Pale mint green background */
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #20113f;
+    color: white;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left h1 {
+    font-size: 3em;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+#username {
+    margin-right: 20px;
+    font-size: 1.2em;
+}
+
+.header-right button {
+    background-color: #709783;
+    color: rgb(0, 0, 0);
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.header-right button:hover {
+    opacity: 0.8;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+form {
+    background: #caa9d7;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+input[type="text"], textarea, select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+button {
+    background-color: #709783;
+    color: rgb(0, 0, 0);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+footer {
+    background-color: #20113f;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
