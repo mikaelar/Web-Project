@@ -32,7 +32,6 @@ interface iRequirement {
     public function clearDependanciesBasedOnThisRequirement();
 
     public function appendSubrequirement(& $requirement);
-    public function addSubrequirement($id, $heading, $content, $priority);
     public function removeSubrequirement(& $requirement);
     public function clearSubrequirements();
 }

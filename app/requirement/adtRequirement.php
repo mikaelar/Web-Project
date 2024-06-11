@@ -240,9 +240,6 @@ abstract class adtRequirement implements iRequirement
         return false;
     }
 
-    // Needs to be redefined in each subtype of requirement (Note - currently we can construct chains of single type - functional with functional or non-functional with non-functional)
-    public abstract function addSubrequirement($id, $heading, $content, $priority);
-
     public function removeSubrequirement(& $requirement)
     {
         if ($this->equals($requirement)) // you cannot remove a subrequirement by removing yourself

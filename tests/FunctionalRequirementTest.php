@@ -173,6 +173,7 @@ class FunctionalRequirementTest extends TestCase
         $this->assertEquals([], $requirement->getComments());
     }
 
+    #[Test]
     public function testPriorityObjectToValue()
     {
         $priority = null;
