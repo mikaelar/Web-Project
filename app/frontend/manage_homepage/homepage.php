@@ -1,4 +1,8 @@
 <?php
+
+namespace App\Backend\Scripts;
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
 session_start();
 if (!isset($_SESSION['username'])) {
     header("Location: ../login_register/login.html");
@@ -18,7 +22,7 @@ $conn = $db->getConnection();
 
 // Fetch projects
 $projects = [];
-$query = "SELECT id, name FROM projects";
+$query = "SELECT id, name, description FROM projects";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {
@@ -31,7 +35,6 @@ if ($result->num_rows > 0) {
 $notifier = new Notifier($db);
 $notifications = $notifier->getNotifications();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,35 +42,66 @@ $notifications = $notifier->getNotifications();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link rel="stylesheet" href="style_homepage.css">
+ 
 </head>
 <body>
-    <div class="header">
-        <h1>Добре дошли в системата за управление на изискванията</h1>
-        <h2>Здравейте, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
-        <button onclick="window.location.href='../../backend/scripts/login_register/logout.php'">Изход</button>
-    </div>
-    <div class="content">
-        <button onclick="window.location.href='../create_project/create_project.html'">Създаване на нов проект</button>
-        <div class="notifications">
-            <button id="notificationButton">🔔 Notifications (<?php echo count($notifications); ?>)</button>
-            <div id="notificationList" style="display: none;">
-                <ul>
-                    <?php foreach ($notifications as $notification): ?>
-                        <li>
-                            <?php echo htmlspecialchars($notification['message']); ?>
-                            <a href="../../backend/scripts/mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
         </div>
-        <h3>Списък с проекти</h3>
-        <ul>
+        <nav>
+            <ul>
+                <li><a href="../manage_homepage/homepage.php">Home</a></li>
+                <li><a href="../create_project/create_project.html">Add Project</a></li>
+                <li><a href="../settings/settings.html">Settings</a></li>
+                <li><a href="../user_stories/userStories.html">Manage User Stories</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <span id="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            <div class="dropdown">
+                <button id="notificationButton" class="notification-btn">🔔 Notifications (<?php echo count($notifications); ?>)</button>
+                <div id="notificationList" class="dropdown-content">
+                    <ul>
+                        <?php foreach ($notifications as $notification): ?>
+                            <li>
+                                <?php echo htmlspecialchars($notification['message']); ?>
+                                <a href="mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+            <button id="logoutButton" onclick="location.href='../login_register/logout.php';">Logout</button>
+        </div>
+    </header>
+    <div class="welcome-message">
+        <h1>Добре дошли в системата за управление на изискванията</h1>
+    
+
+</div>
+    <div class="content">
+        <div class="board">
             <?php foreach ($projects as $project): ?>
-                <li><a href="../project_details.php?id=<?php echo $project['id']; ?>"><?php echo htmlspecialchars($project['name']); ?></a></li>
+            <div class="list">
+                <h3><?php echo htmlspecialchars($project['name']); ?></h3>
+                <div class="cards">
+                    
+                <div class="card" draggable="true" data-id="<?php echo $project['id']; ?>">
+                        <p><?php echo htmlspecialchars($project['description']); ?></p>
+                        <button onclick="location.href='../../backend/scripts/project_details.php?id=<?php echo $project['id']; ?>';">Open Project</button>
+                    </div>
+                </div>
+            </div>
+            
             <?php endforeach; ?>
-        </ul>
+        </div>
     </div>
+    
+    <footer>
+        <p>&copy; 2024 Software Requirements Management</p>
+    </footer>
+    <script src="main_page.js"></script>
     <script>
         document.getElementById('notificationButton').onclick = function() {
             var notificationList = document.getElementById('notificationList');
@@ -80,3 +114,4 @@ $notifications = $notifier->getNotifications();
     </script>
 </body>
 </html>
+

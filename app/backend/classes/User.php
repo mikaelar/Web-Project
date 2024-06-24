@@ -26,10 +26,10 @@ class User {
 
         if ($stmt->execute()) {
             echo "Вие се регистрирахте успешно.";
-            header("refresh:2;url=login.html");
+            header("refresh:2;url=../../../frontend/login_register/login.html");
         } else {
             echo "Error: " . $stmt->error;
-            header("refresh:2;url=register.html");
+            header("refresh:2;url=../../../frontend/login_register/register.html");
         }
 
         $stmt->close();
@@ -53,16 +53,16 @@ class User {
             if (password_verify($password, $hashed_password)) {
                 $this->authenticated = true;
                 $_SESSION['username'] = $username;
-                header("refresh:1;url=../manage_homepage/homepage.php");
+                header("refresh:1;url=../../../frontend/manage_homepage/homepage.php");
                 exit();
             } else {
                 echo "Грешна парола! Моля опитай пак.";
-                header("refresh:2;url=login.html");
+                header("refresh:2;url=../../../frontend/login_register/login.html");
                 exit();
             }
         } else {
             echo "Потребителят не е намерен. Моля опитай пак.";
-            header("refresh:2;url=login.html");
+            header("refresh:2;url=../../../frontend/login_register/login.html");
         }
 
         $stmt->close();
@@ -91,23 +91,23 @@ class User {
 
                 if ($update_stmt->execute()) {
                     echo '<div style="text-align: center; font-size: 24px; margin-top: 20px;">Паролата е успешно променена! Препращане към страницата за вход в системата.</div>';
-                    header("refresh:2;url=login.html");
+                    header("refresh:2;url=../../../frontend/login_register/login.html");
                     exit();
                 } else {
                     echo '<div style="text-align: center; font-size: 24px; margin-top: 20px;">Възникна грешка при промяната на паролата. Препращане към страницата за вход в системата.</div>';
-                    header("refresh:2;url=login.html");
+                    header("refresh:2;url=../../../frontend/login_register/login.html");
                     exit();
                 }
 
                 $update_stmt->close();
             } else {
                 echo '<div style="text-align: center; font-size: 24px; margin-top: 20px;">Грешна текуща парола! Препращане към страницата за вход в системата.</div>';
-                header("refresh:2;url=login.html");
+                header("refresh:2;url=../../../frontend/login_register/login.html");
                 exit();
             }
         } else {
             echo '<div style="text-align: center; font-size: 24px; margin-top: 20px;">Потребителят не е намерен. Препращане към страницата за регистрация в системата.</div>';
-            header("refresh:2;url=register.html");
+            header("refresh:2;url=../../../frontend/login_register/register.html");
             exit();
         }
 
