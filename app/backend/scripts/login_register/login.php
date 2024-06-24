@@ -1,5 +1,6 @@
 <?php
 namespace App\Backend\Scripts\Login_Register;
+require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);

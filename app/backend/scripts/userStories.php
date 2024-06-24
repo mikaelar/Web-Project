@@ -1,5 +1,6 @@
 <?php
 namespace App\Backend\Scripts;
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -12,7 +13,7 @@ $dbpassword = "";
 $dbname = "form";
 
 // Създаване на връзка с базата данни
-$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+$conn = new \mysqli($servername, $dbusername, $dbpassword, $dbname);
 
 // Проверка на връзката
 if ($conn->connect_error) {
