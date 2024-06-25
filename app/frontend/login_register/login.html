@@ -7,21 +7,28 @@
     <link rel="stylesheet" href="style_login.css">
 </head>
 <body>
-    <header>
-        <h1>Система за управление на изискванията</h1>
-        <h2>Вход</h2>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
     </header>
+    <div class="container">
+        <div class="content">
+            <form action="../../backend/scripts/login_register/login.php" method="POST">
+                <label for="username">Потребителско име:</label>
+                <input type="text" name="username" required>
 
-    <form action="../../backend/scripts/login_register/login.php" method="POST">
-        <label for="username">Потребителско име:</label>
-        <input type="text" name="username" required>
-
-        <label for="password">Парола:</label>
-        <input type="password" name="password" required>
-        <button type="submit">Влез</button>
-    </form>
-    
-    <p>Забравена парола? <a href="change_password.html">Влезте тук</a></p>
-    <p>Не сте регистрирани? <a href="register.html">Регистрирайте се тук</a></p>
+                <label for="password">Парола:</label>
+                <input type="password" name="password" required>
+                <button type="submit">Влез</button>
+            </form>
+        </div>
+    </div>
+    <div class="content">
+        <label>
+            <p>Забравена парола? <a href="change_password.html">Влезте тук</a></p>
+            <p>Вече сте регистриран? <a href="login.html">Влезте тук</a></p>
+            </label>
+        </div>
 </body>
 </html>
