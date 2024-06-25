@@ -7,25 +7,40 @@
     <link rel="stylesheet" href="style_login.css">
 </head>
 <body>
-    <h2>Регистрация</h2>
-    <form action="../../backend/scripts/login_register/register.php" method="POST">
-        <label for="username">Потребителско име:</label>
-        <input type="text" name="username" required>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
+    </header>
 
-        <label for="email">Имейл:</label>
-        <input type="email" name="email" required>
+    <div class="content">
+        <h2>Регистрация</h2>
+        <form action="../../backend/scripts/login_register/register.php" method="POST">
+            <label for="username">Потребителско име:</label>
+            <input type="text" name="username" required>
 
-        <label for="password">Парола:</label>
-        <input type="password" name="password" required>
+            <label for="email">Имейл:</label>
+            <input type="email" name="email" required>
 
-        <label for="confirm_password">Потвърдете паролата:</label>
-        <input type="password" name="confirm_password" required>
+            <label for="password">Парола:</label>
+            <input type="password" name="password" required>
 
-        <button type="submit">Регистрирай ме!</button>
-    </form>
-    
-    <p>Забравена парола? <a href="change_password.html">Влезте тук</a></p>
-    <p>Вече сте регистриран? <a href="login.html">Влезте тук</a></p>
+            <label for="confirm_password">Потвърдете паролата:</label>
+            <input type="password" name="confirm_password" required>
+
+            <button type="submit">Регистрирай ме!</button>
+        </form>
+    </div>
+    <div class="content">
+    <label>
+        <p>Забравена парола? <a href="change_password.html">Влезте тук</a></p>
+        <p>Вече сте регистриран? <a href="login.html">Влезте тук</a></p>
+        </label>
+    </div>
+    <footer>
+        <p>&copy; 2024 Software Requirements Management. All rights reserved.</p>
+    </footer>
 </body>
 </html>
+
 
