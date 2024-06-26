@@ -103,13 +103,13 @@ $conn->close();
                         <?php foreach ($notifications as $notification): ?>
                             <li>
                                 <?php echo htmlspecialchars($notification['message']); ?>
-                                <a href="mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
+                                <a href="../../backend/scripts/mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
-            <button id="logoutButton" onclick="location.href='../login_register/logout.php';">Logout</button>
+            <button id="logoutButton" onclick="location.href='../../backend/scripts/login_register/logout.php';">Logout</button>
         </div>
     </header>
     <main>
