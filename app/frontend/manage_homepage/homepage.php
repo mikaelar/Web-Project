@@ -76,7 +76,7 @@ $notifications = $notifier->getNotifications();
         </div>
     </header>
     <div class="welcome-message">
-        <h1>Добре дошли в системата за управление на изискванията</h1>
+        <h1>Добре дошли в системата за управление на изискванията. <a href="../../backend/scripts/export_projects.php">Експортирай проектите?</a></h1>
     
 
 </div>

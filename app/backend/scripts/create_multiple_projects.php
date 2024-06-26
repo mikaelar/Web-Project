@@ -61,63 +61,127 @@ $db = new Database($servername, $dbusername, $dbpassword, $dbname);
 // }
 
 
-$tabText = $_POST['tabText'] ?? '';
-$tabTextArray = explode("\n", $tabText);
-$tabTextArraySplit = [];
-$tabTextArrayLen = count($tabTextArray);
-for ($rowIndex = 0; $rowIndex < $tabTextArrayLen; $rowIndex++) {
-    $row = $tabTextArray[$rowIndex];
-    $csvArray = str_getcsv($row, "\t");
-    // if there are any students, on this project
-    $ADMINISTRATIVE_ROWS_COUNT = 3;
-    if (strlen($csvArray[1]) !== 0) {
-        if ($rowIndex <= $ADMINISTRATIVE_ROWS_COUNT - 1) { // it is header row or example row, skip them!
-            continue;
-        }
-        if (!isset($csvArray[2]) || $csvArray[2] === null || $csvArray[2] === "") // it is empty, skip the line
-            continue;
+// 2 variants for file format -> 4 cols (our supported) or teachers format
+function handleInput() {
+    $tabText = $_POST['tabText'] ?? '';
+    $tabTextArray = explode("\n", $tabText);
+    // TODO - error message for no rows
+    if (count(str_getcsv($tabTextArray[0], "\t")) > 4) {
+        return handleTeachersFormat($tabTextArray);
+    }
+    else {
+        return handleOurFormat($tabTextArray);
+    }
+}
 
-        // split by valid fields on ; . Note that a ; can be trailling!
-        $members = explode(";", $csvArray[2]);
-        $teams = explode(";", $csvArray[1]);
-        $teamsCount = count($teams);
-        for ($teamIndex = 0; $teamIndex < $teamsCount; $teamIndex++) {
-            if ($teams[$teamIndex] !== null && strlen($teams[$teamIndex]) !== 0) {
-                $teamInfo = [$csvArray[0], trim($teams[$teamIndex]), trim($members[$teamIndex]), ...(array_slice($csvArray, 3))];
-                $tabTextArraySplit[] = $teamInfo;
+function handleTeachersFormat($tabTextArray) {
+    $tabTextArraySplit = [];
+    $tabTextArrayLen = count($tabTextArray);
+    for ($rowIndex = 0; $rowIndex < $tabTextArrayLen; $rowIndex++) {
+        $row = $tabTextArray[$rowIndex];
+        $csvArray = str_getcsv($row, "\t");
+        
+        // if there are any students, on this project
+        $ADMINISTRATIVE_ROWS_COUNT = 3;
+        if (strlen($csvArray[1]) !== 0) {
+            if ($rowIndex <= $ADMINISTRATIVE_ROWS_COUNT - 1) { // it is header row or example row, skip them!
+                continue;
             }
+            if (!isset($csvArray[2]) || $csvArray[2] === null || $csvArray[2] === "") // it is empty, skip the line
+                continue;
+    
+            $requirements = $csvArray[7] ?? "";
+            if (isset($csvArray[8]) && strlen($csvArray[8]) > 0)
+            $requirements = $requirements . ',' . $csvArray[8];
+            if (isset($csvArray[9]) && strlen($csvArray[9]) > 0)
+            $requirements = $requirements . ',' . $csvArray[9];
+
+            $interestingCsvFields = [$csvArray[2], $csvArray[5], $csvArray[6], $requirements];
+            // split by valid fields on ; . Note that a ; can be trailling!
+            $members = explode(";", $csvArray[2]);
+            $teams = explode(";", $csvArray[1]);
+            $teamsCount = count($teams);
+            for ($teamIndex = 0; $teamIndex < $teamsCount; $teamIndex++) {
+                if ($teams[$teamIndex] !== null && strlen($teams[$teamIndex]) !== 0) {
+                    $formatedMembers = trim($members[$teamIndex]);
+                    $formatedMembers = preg_replace('/\s+/', " ", $formatedMembers); // remove multiple spaces inside the name
+
+                    $interestingCsvFields[0] = $formatedMembers;
+                    $tabTextArraySplit[] = $interestingCsvFields;
+                }
+            }
+    
         }
-
     }
+    return $tabTextArraySplit;
 }
 
-$isSuccesful = false;
-foreach ($tabTextArraySplit as $value) {
-    // name, description, collaborators, initial_requirements
+function handleOurFormat($tabTextArray) {
+    $tabTextArraySplit = [];
+    $tabTextArrayLen = count($tabTextArray);
+    echo "<pre>";
+    echo "We have to traverse $tabTextArrayLen rows!";
+    echo "</pre>";
+    for ($rowIndex = 0; $rowIndex < $tabTextArrayLen; $rowIndex++) {
+        $row = $tabTextArray[$rowIndex];
+        $csvArray = str_getcsv($row, "\t");
+        
+        // if there are any students, on this project
+        $ADMINISTRATIVE_ROWS_COUNT = 1;
+        if (strlen($csvArray[0]) !== 0) {
+            if ($rowIndex <= $ADMINISTRATIVE_ROWS_COUNT - 1) { // it is header row or example row, skip them!
+                continue;
+            }
+            if (!isset($csvArray[0]) || $csvArray[0] === null || $csvArray[0] === "") // it is empty, skip the line
+                continue;
+    
+            // split by valid fields on ; . Note that a ; can be trailling!
+            $members = explode(";", $csvArray[0]);
+            $membersCount = count($members);
+            for ($membersIndex = 0; $membersIndex < $membersCount; $membersIndex++) {
+                if ($members[$membersIndex] !== null && strlen($members[$membersIndex]) !== 0) {
+                    $formatedMembers = trim($members[$membersIndex]);
+                    $formatedMembers = preg_replace('/\s+/', " ", $formatedMembers); // remove multiple spaces inside the name
+
+                    $csvArray[0] = $formatedMembers;
+                    $tabTextArraySplit[] = $csvArray;
+                }
+            }
+    
+        }
+    }
+    return $tabTextArraySplit;
+}
+
+function addCsvValuesToDB($csvValues, $db) {
+    $isSuccesful = false;
     $notifier = new Notifier($db);
-    $project = new Project($db);
 
-    $name = $value[5] ?? "";
-    $description = $value[6] ?? "";
-    $collaborators = $value[2] ?? "";
-
-    $requirements = $value[7] ?? "";
-    if (isset($value[8]) && strlen($value[8]) > 0)
-        $requirements = $requirements . ',' . $value[8];
-    if (isset($value[9]) && strlen($value[9]) > 0)
-        $requirements = $requirements . ',' . $value[9];
-
-    $project->setProjectDetails($name, $description, $collaborators, $requirements);
-
-    if ($project->create()) {
-        $notifier->addNotification("Нов проект е създаден: " . $name);
-        $isSuccesful = true;
+    foreach ($csvValues as $value) {
+        // collaborators, name, description, initial_requirements
+        $project = new Project($db);
+    
+        $collaborators = $value[0] ?? "";
+        $name = $value[1] ?? "";
+        $description = $value[2] ?? "";
+        $requirements = $value[3] ?? "";
+        $project->setProjectDetails($name, $description, $collaborators, $requirements);
+    
+        if ($project->create()) {
+            $notifier->addNotification("Нов проект е създаден: " . $name);
+            $isSuccesful = true;
+        }
+    }
+    
+    if ($isSuccesful) {
+        header("Location: ../../frontend/manage_homepage/homepage.php");
+    } else {
+        header("Location: ../../frontend/create_project/add_multiple_projects.html");
     }
 }
 
-if ($isSuccesful) {
-    header("Location: ../../frontend/manage_homepage/homepage.php");
-} else {
-    header("Location: ../../frontend/create_project/add_multiple_projects.html");
-}
+
+$values = handleInput();
+addCsvValuesToDB($values, $db);
+
 ?>
