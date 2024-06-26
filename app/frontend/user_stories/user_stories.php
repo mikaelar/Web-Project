@@ -1,74 +1,75 @@
 <?php
+namespace App\Backend\Scripts;
+
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+use App\Backend\Classes\Database;
+use App\Backend\Classes\Notifier;
+
 session_start();
 if (!isset($_SESSION['username'])) {
     header("Location: ../login_register/login.html");
     exit();
 }
 
-require_once '../Database.php';
-require_once '../Notifier.php';
-
-// Database connection
+// Параметри за връзка с базата данни
 $servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
+$username = "root";
+$password = "";
 $dbname = "form";
-$db = new Database($servername, $dbusername, $dbpassword, $dbname);
+
+// Създаване на обект Database
+$db = new Database($servername, $username, $password, $dbname);
 $conn = $db->getConnection();
 
-// Fetch user stories
-$userStories = [];
-$query = "SELECT id, name, title, description FROM user_stories";
-$result = $conn->query($query);
+// Проверка за валидност на връзката
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+// Инициализация на масиви за потребителски истории и уведомления
+$userStories = [];
+$notifications = [];
+
+// Извличане на потребителски истории
+$sqlUserStories = "SELECT id, title, description FROM userstories";
+$resultUserStories = $conn->query($sqlUserStories);
+
+if ($resultUserStories->num_rows > 0) {
+    while ($row = $resultUserStories->fetch_assoc()) {
         $userStories[] = $row;
     }
 }
 
-// Fetch notifications
+// Извличане на уведомления
 $notifier = new Notifier($db);
 $notifications = $notifier->getNotifications();
 
-// Handle form submission for adding, editing, and removing user stories
+// Обработка на формуляра за добавяне, редактиране или премахване на потребителска история
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $action = $_POST['action'];
-    
-    if ($action == "add") {
-        $title = $conn->real_escape_string($_POST['userStoryTitle']);
-        $description = $conn->real_escape_string($_POST['userStoryDescription']);
-        $sql = "INSERT INTO user_stories (title, description) VALUES ('$title', '$description')";
-        if ($conn->query($sql) === TRUE) {
-            // Notify about the new user story
-            $notifier->addNotification("A new user story has been added!");
-            header("Location: UserStories.php");
-            exit();
-        }
-    } elseif ($action == "edit") {
-        $id = intval($_POST['editUserStorySelect']);
-        $title = $conn->real_escape_string($_POST['editUserStoryTitle']);
-        $description = $conn->real_escape_string($_POST['editUserStoryDescription']);
-        $sql = "UPDATE user_stories SET title='$title', description='$description' WHERE id=$id";
-        if ($conn->query($sql) === TRUE) {
-            // Notify about the user story edit
-            $notifier->addNotification("A user story has been edited!");
-            header("Location: UserStories.php");
-            exit();
-        }
-    } elseif ($action == "remove") {
-        $id = intval($_POST['removeUserStorySelect']);
-        $sql = "DELETE FROM user_stories WHERE id=$id";
-        if ($conn->query($sql) === TRUE) {
-            // Notify about the user story removal
-            $notifier->addNotification("A user story has been removed!");
-            header("Location: UserStories.php");
-            exit();
+    if (isset($_POST['action'])) {
+        $action = $_POST['action'];
+
+        if ($action == "add") {
+            $title = mysqli_real_escape_string($conn, $_POST['userStoryTitle']);
+            $description = mysqli_real_escape_string($conn, $_POST['userStoryDescription']);
+            $sqlAdd = "INSERT INTO userstories (title, description) VALUES ('$title', '$description')";
+           
+        } elseif ($action == "edit") {
+            $id = intval($_POST['editUserStorySelect']);
+            $title = mysqli_real_escape_string($conn, $_POST['editUserStoryTitle']);
+            $description = mysqli_real_escape_string($conn, $_POST['editUserStoryDescription']);
+            $sqlEdit = "UPDATE userstories SET title='$title', description='$description' WHERE id=$id";
+            
+        } elseif ($action == "remove") {
+            $id = intval($_POST['removeUserStorySelect']);
+            $sqlRemove = "DELETE FROM userstories WHERE id=$id";
+            
         }
     }
 }
 
-$conn->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -77,8 +78,20 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage User Stories - Software Requirements Management</title>
-    <link rel="stylesheet" href="user.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="styles_user_stories.css">
+    <style>
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content.show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -89,33 +102,35 @@ $conn->close();
             <ul>
                 <li><a href="../manage_homepage/homepage.php">Home</a></li>
                 <li><a href="../create_project/create_project.html">Add Project</a></li>
-                <li><a href="../projects/Projects.html" target="_blank">Projects</a></li>
-                <li><a href="../settings/settings.html">Settings</a></li>
-                <li><a href="UserStories.php">Manage User Stories</a></li>
+                <li><a href="../settings/settings.php">Settings</a></li>
+                <li><a href="../user_stories/user_stories.php">Manage User Stories</a></li>
             </ul>
         </nav>
         <div class="header-right">
-            <span id="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-            <div class="dropdown">
-                <button id="notificationButton" class="notification-btn">🔔 Notifications (<?php echo count($notifications); ?>)</button>
-                <div id="notificationList" class="dropdown-content">
-                    <ul>
-                        <?php foreach ($notifications as $notification): ?>
-                            <li>
-                                <?php echo htmlspecialchars($notification['message']); ?>
-                                <a href="../../backend/scripts/mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-            <button id="logoutButton" onclick="location.href='../../backend/scripts/login_register/logout.php';">Logout</button>
+    <span id="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+    <div class="dropdown">
+        <button id="notificationButton" class="notification-btn">🔔 Notifications (<?php echo count($notifications); ?>)</button>
+        <div id="notificationList" class="dropdown-content">
+            <ul>
+                <?php foreach ($notifications as $notification): ?>
+                    <li>
+                      <span class="notification-message"><?php echo htmlspecialchars($notification['message']); ?></span>
+                      <a class="mark-as-read" href="../../backend/scripts/mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         </div>
+    </div>
+    <button id="logoutButton" onclick="location.href='../../backend/scripts/login_register/logout.php';">Logout</button>
+</div>
+
+
+        
     </header>
     <main>
         <section id="manage-user-stories">
             <h2>Manage User Stories</h2>
-            <form method="POST" action="UserStories.php">
+            <form method="POST" action="userstories.php">
                 <h3>Add User Story</h3>
                 <label for="userStoryTitle">Title:</label>
                 <input type="text" id="userStoryTitle" name="userStoryTitle" required>
@@ -124,7 +139,8 @@ $conn->close();
                 <input type="hidden" name="action" value="add">
                 <button type="submit">Add User Story</button>
             </form>
-            <form method="POST" action="UserStories.php">
+            
+            <form method="POST" action="userstories.php">
                 <h3>Edit User Story</h3>
                 <label for="editUserStorySelect">Select User Story:</label>
                 <select id="editUserStorySelect" name="editUserStorySelect" required>
@@ -139,7 +155,8 @@ $conn->close();
                 <input type="hidden" name="action" value="edit">
                 <button type="submit">Edit User Story</button>
             </form>
-            <form method="POST" action="UserStories.php">
+
+            <form method="POST" action="userstories.php">
                 <h3>Remove User Story</h3>
                 <label for="removeUserStorySelect">Select User Story:</label>
                 <select id="removeUserStorySelect" name="removeUserStorySelect" required>
@@ -152,23 +169,20 @@ $conn->close();
             </form>
         </section>
     </main>
+   
+    <script src="main_page.js"></script>
+    <script>
+        document.getElementById('notificationButton').onclick = function() {
+            var notificationList = document.getElementById('notificationList');
+            if (notificationList.style.display === 'none') {
+                notificationList.style.display = 'block';
+            } else {
+                notificationList.style.display = 'none';
+            }
+        };
+    </script>
     <footer>
         <p>&copy; 2024 Software Requirements Management</p>
     </footer>
-    <script>
-    $(document).ready(function() {
-        // Показване и скриване на нотификациите
-        $('#notificationButton').on('click', function() {
-            $('#notificationList').toggle();
-        });
-
-        // Скриване на нотификациите при клик извън тях
-        $(document).on('click', function(event) {
-            if (!$(event.target).closest('.dropdown').length) {
-                $('#notificationList').hide();
-            }
-        });
-    });
-    </script>
 </body>
 </html>
