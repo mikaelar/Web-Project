@@ -16,6 +16,82 @@ body {
     color: #fff;
 }
 
+nav ul li {
+    margin: 0 10px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+#username {
+    margin-right: 20px;
+    font-size: 1.2em;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.notification-btn, #logoutButton {
+    background-color: #21a1f1;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.notification-btn:hover, #logoutButton:hover, .notification-btn:focus {
+    background-color: #0074d9;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #004080; /* Променете цвета на фона на ваше усмотрение */
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    margin-top: 8px;
+    border-radius: 5px;
+}
+
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: #2b57b7; /* Променете цвета на текста на ваше усмотрение */
+    display: block;
+    padding: 12px 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #0074d9; /* Променете цвета при ховър на ваше усмотрение */
+}
+
+
+.dropdown.show .dropdown-content {
+    display: block;
+}
+
+nav ul li a {
+    color: #5959af;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #21a1f1;
+    transform: scale(1.1);
+}
 .header-left h1 {
     font-size: 2em; /* Размер на заглавието */
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Ефект на сянка на текста */
@@ -33,7 +109,13 @@ nav ul {
 nav ul li {
     margin: 0 15px;
 }
+.dropdown-content ul li a.mark-as-read {
+    color: #0074d9; /* По-наситено синьо */
+}
 
+.dropdown-content ul li a.mark-as-read:hover {
+    color: #004080; /* Цвят на текста при ховър */
+}
 nav ul li a {
     color: white; /* Цвят на текста в навигацията */
     text-decoration: none;
@@ -85,7 +167,28 @@ form {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Сянка на формите */
     margin-bottom: 20px;
 }
+.notification-message {
+    color: #0074d9; /* Син цвят на текста */
+}
 
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: #fff; /* Цвят на останалия текст в падащото меню */
+    display: block;
+    padding: 12px 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #fbfbfb; /* Цвят при ховър на текста в падащото меню */
+}
 input[type="text"], textarea, select {
     width: 100%;
+}
+.dropdown-content {
+    display: none; /* По подразбиране скрито */
+    
+}
+.dropdown-content.show {
+    display: block;
 }
