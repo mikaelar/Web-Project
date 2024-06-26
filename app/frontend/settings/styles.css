@@ -1,0 +1,464 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f7; /* Цветът на фона от главната страница */
+    color: #333; /* Общ цвят на текста */
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #61dafb; /* Цветът на заглавката от главната страница */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f7; /* Цветът на фона от главната страница */
+    color: #333; /* Общ цвят на текста */
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #61dafb; /* Цветът на заглавката от главната страница */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+#username {
+    margin-right: 20px;
+    font-size: 1.2em;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.notification-btn, #logoutButton {
+    background-color: #21a1f1;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.notification-btn:hover, #logoutButton:hover, .notification-btn:focus {
+    background-color: #0074d9;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #004080; /* Променете цвета на фона на ваше усмотрение */
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    margin-top: 8px;
+    border-radius: 5px;
+}
+
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: #2b57b7; /* Променете цвета на текста на ваше усмотрение */
+    display: block;
+    padding: 12px 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #0074d9; /* Променете цвета при ховър на ваше усмотрение */
+}
+
+
+.dropdown.show .dropdown-content {
+    display: block;
+}
+
+nav ul li a {
+    color: #5959af;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #21a1f1;
+    transform: scale(1.1);
+}
+.header-left h1 {
+    font-size: 2em; /* Размер на заглавието */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Ефект на сянка на текста */
+    cursor: pointer;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+.dropdown-content ul li a.mark-as-read {
+    color: #0074d9; /* По-наситено синьо */
+}
+
+.dropdown-content ul li a.mark-as-read:hover {
+    color: #004080; /* Цвят на текста при ховър */
+}
+nav ul li a {
+    color: white; /* Цвят на текста в навигацията */
+    text-decoration: none;
+    font-size: 1.2em; /* Размер на текста в навигацията */
+}
+
+nav ul li a:hover {
+    background-color: #21a1f1; /* Цвят при навърхване */
+    transform: scale(1.1); /* Ефект на уголемяване при навърхване */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+#username {
+    margin-right: 20px;
+    font-size: 1.2em; /* Размер на текста за потребителското име */
+}
+
+.header-right button {
+    background-color: #21a1f1; /* Цветът на бутоните от главната страница */
+    color: white;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.header-right button:hover {
+    background-color: #0074d9; /* Цвят при навърхване на бутоните */
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+form {
+    background: #ffffff; /* Цветът на фона на формите */
+    border: 1px solid #ddd; /* Бордюр на формите */
+    border-radius: 10px; /* Закръглени ъгли на формите */
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Сянка на формите */
+    margin-bottom: 20px;
+}
+.notification-message {
+    color: #0074d9; /* Син цвят на текста */
+}
+
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: #fff; /* Цвят на останалия текст в падащото меню */
+    display: block;
+    padding: 12px 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #fbfbfb; /* Цвят при ховър на текста в падащото меню */
+}
+input[type="text"], textarea, select {
+    width: 100%;
+}
+.dropdown-content {
+    display: none; /* По подразбиране скрито */
+    
+}
+.dropdown-content.show {
+    display: block;
+}
+#username {
+    margin-right: 20px;
+    font-size: 1.2em;
+}
+/* Стилове за падащото меню с уведомления */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.notification-btn {
+    background-color: #21a1f1;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.notification-btn:hover {
+    background-color: #0074d9;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #004080;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    margin-top: 8px;
+    border-radius: 5px;
+}
+
+.dropdown-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dropdown-content ul li {
+    padding: 10px;
+}
+
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 12px 16px;
+}
+/* Стилове за балони */
+section label {
+    display: inline-block;
+    padding: 8px;
+    background-color: #f0f0f0; /* Цвят на фона на балона */
+    border: 1px solid #ccc; /* Рамка на балона */
+    border-radius: 5px; /* Закръглени ъгли на балона */
+    margin-bottom: 10px; /* Разтояние между балоните */
+    font-weight: bold; /* Удебелен текст */
+    cursor: pointer; /* Курсор при навлизане */
+}
+
+section label:hover {
+    background-color: #e0e0e0; /* Цвят на фона при ховър */
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.mark-as-read {
+    color: black;
+    background-color: #ccebff;
+}
+
+.mark-as-read:hover {
+    background-color: #fbfbfb;
+    color: black;
+}
+
+
+.notification-btn,
+#logoutButton {
+    background-color: #21a1f1;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.notification-btn:hover,
+#logoutButton:hover,
+.notification-btn:focus {
+    background-color: #0074d9;
+}
+
+/* Dropdown styles for notifikatora */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #004080; /* Тъмно синьо на фона на падащото меню */
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    margin-top: 8px;
+    border-radius: 5px; /* Закръглени ъгли на блока */
+}
+
+.dropdown-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dropdown-content ul li {
+    padding: 10px;
+}
+
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: #fff; /* Бял цвят на текста */
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 14px;
+    padding: 12px 16px; /* Подходящи размери на padding за по-голям фон */
+    border-radius: 5px; /* Закръглени ъгли */
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #f1f1f1; /* Бяло на фона при hover */
+    color: #000; /* Черен цвят на текста при hover */
+}
+
+/* Additional styles specific to notifikatora */
+.dropdown-content ul li a.mark-as-read {
+    color: #0074d9; /* Цвят на текста */
+    background-color: #ccebff; /* Цвят на фона */
+    padding: 12px 16px; /* Подходящи размери на padding за по-голям фон */
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px; /* Закръглени ъгли */
+}
+
+.dropdown-content ul li a.mark-as-read:hover {
+    background-color: #b3d9ff; /* Цвят на фона при ховър */
+    color: #004080; /* Цвят на текста при ховър */
+}
+
+/* Main content and form styles */
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+/* Dropdown styles for notifikatora */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #004080; /* Тъмно синьо на фона на падащото меню */
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    margin-top: 8px;
+    border-radius: 5px; /* Закръглени ъгли на блока */
+}
+
+.dropdown-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dropdown-content ul li {
+    padding: 10px;
+}
+
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: #fff; /* Бял цвят на текста */
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 14px;
+    padding: 12px 16px; /* Подходящи размери на padding за по-голям фон */
+    border-radius: 5px; /* Закръглени ъгли */
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #f1f1f1; /* Бяло на фона при hover */
+    color: #000; /* Черен цвят на текста при hover */
+}
+
+/* Additional styles specific to notifikatora */
+.dropdown-content ul li a.mark-as-read {
+    color: #0074d9; /* Цвят на текста */
+    background-color: #ccebff; /* Цвят на фона */
+    padding: 12px 16px; /* Подходящи размери на padding за по-голям фон */
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px; /* Закръглени ъгли */
+}
+
+.dropdown-content ul li a.mark-as-read:hover {
+    background-color: #b3d9ff; /* Цвят на фона при ховър */
+    color: #004080; /* Цвят на текста при ховър */
+}
+
+form {
+    background: #ffffff; /* Цветът на фона на формите */
+    border: 1px solid #ddd; /* Бордюр на формите */
+    border-radius: 10px; /* Закръглени ъгли на формите */
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Сянка на формите */
+    margin-bottom: 20px;
+}
+
+.notification-message {
+    color: #0074d9; /* Син цвят на текста */
+}
+
+/* Footer styles */
+footer {
+    background-color: #f0f0f0;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
