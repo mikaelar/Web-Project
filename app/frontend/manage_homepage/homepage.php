@@ -42,8 +42,37 @@ $notifications = $notifier->getNotifications();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link rel="stylesheet" href="style_homepage.css">
- 
-</head>
+    <style>
+
+h1 {
+    font-size: 33px;
+    text-align: center;
+    margin-top: 50px; /* Примерно разстояние отгоре */
+    font-family: Arial, sans-serif;
+}
+
+h1 a {
+    font-size: 27px;
+    color: #0074d9; /* Цвят на линка */
+    text-decoration: none;
+    border-bottom: 1px dashed #0074d9; /* Пунктирано подчертаване */
+    transition: border-bottom 0.3s ease;
+    font-family: Arial, sans-serif;
+}
+footer {
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+}
+body {
+    padding-bottom: 60px; /* Добавете 10px допълнително за възможно допълнение */
+}
+
+h1 a:hover {
+    border-bottom: 1px solid #0074d9; /* Пълно подчертаване при ховър */
+}
+    </style>
 <body>
     <header class="header">
         <div class="header-left">
@@ -76,10 +105,10 @@ $notifications = $notifier->getNotifications();
         </div>
     </header>
     <div class="welcome-message">
-        <h1>Добре дошли в системата за управление на изискванията. <a href="../../backend/scripts/export_projects.php">Експортирай проектите?</a></h1>
-    
+        <h1>Добре дошли в системата за управление на изискванията! </h1>
+        <h1><a href="../../backend/scripts/export_projects.php">Експортирай проектите?</a></h1>
+    </div>
 
-</div>
     <div class="content">
         <div class="board">
             <?php foreach ($projects as $project): ?>
@@ -89,7 +118,7 @@ $notifications = $notifier->getNotifications();
                     
                 <div class="card" draggable="true" data-id="<?php echo $project['id']; ?>">
                         <p><?php echo htmlspecialchars($project['description']); ?></p>
-                        <button onclick="location.href='../../backend/scripts/project_details.php?id=<?php echo $project['id']; ?>';">Open Project</button>
+                        <button onclick="location.href='../../frontend/ProjectDetails/project_details.php?id=<?php echo $project['id']; ?>';">Open Project</button>
                     </div>
                 </div>
             </div>
@@ -114,4 +143,3 @@ $notifications = $notifier->getNotifications();
     </script>
 </body>
 </html>
-
