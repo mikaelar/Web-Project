@@ -118,7 +118,7 @@ h1 a:hover {
                     
                 <div class="card" draggable="true" data-id="<?php echo $project['id']; ?>">
                         <p><?php echo htmlspecialchars($project['description']); ?></p>
-                        <button onclick="location.href='../../frontend/ProjectDetails/project_details.php?id=<?php echo $project['id']; ?>';">Open Project</button>
+                        <button onclick="location.href='../../frontend/project_details/project_details.php?id=<?php echo $project['id']; ?>';">Open Project</button>
                     </div>
                 </div>
             </div>
@@ -143,3 +143,5 @@ h1 a:hover {
     </script>
 </body>
 </html>
+
+
