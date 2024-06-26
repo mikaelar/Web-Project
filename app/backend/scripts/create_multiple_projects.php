@@ -64,39 +64,60 @@ $db = new Database($servername, $dbusername, $dbpassword, $dbname);
 $tabText = $_POST['tabText'] ?? '';
 $tabTextArray = explode("\n", $tabText);
 $tabTextArraySplit = [];
-foreach ($tabTextArray as $value) {
-    $csvArray = str_getcsv($value, "\t");
-    echo "<pre>";
-    echo implode("|", $csvArray);
-    echo "</pre>";
+$tabTextArrayLen = count($tabTextArray);
+for ($rowIndex = 0; $rowIndex < $tabTextArrayLen; $rowIndex++) {
+    $row = $tabTextArray[$rowIndex];
+    $csvArray = str_getcsv($row, "\t");
     // if there are any students, on this project
+    $ADMINISTRATIVE_ROWS_COUNT = 3;
     if (strlen($csvArray[1]) !== 0) {
-        $tabTextArraySplit[] = $csvArray;
+        if ($rowIndex <= $ADMINISTRATIVE_ROWS_COUNT - 1) { // it is header row or example row, skip them!
+            continue;
+        }
+        if (!isset($csvArray[2]) || $csvArray[2] === null || $csvArray[2] === "") // it is empty, skip the line
+            continue;
+
+        // split by valid fields on ; . Note that a ; can be trailling!
+        $members = explode(";", $csvArray[2]);
+        $teams = explode(";", $csvArray[1]);
+        $teamsCount = count($teams);
+        for ($teamIndex = 0; $teamIndex < $teamsCount; $teamIndex++) {
+            if ($teams[$teamIndex] !== null && strlen($teams[$teamIndex]) !== 0) {
+                $teamInfo = [$csvArray[0], trim($teams[$teamIndex]), trim($members[$teamIndex]), ...(array_slice($csvArray, 3))];
+                $tabTextArraySplit[] = $teamInfo;
+            }
+        }
+
     }
 }
 
+$isSuccesful = false;
 foreach ($tabTextArraySplit as $value) {
     // name, description, collaborators, initial_requirements
     $notifier = new Notifier($db);
     $project = new Project($db);
 
-    $name = $value[4] ?? "";
-    $description = $value[5] ?? "";
+    $name = $value[5] ?? "";
+    $description = $value[6] ?? "";
     $collaborators = $value[2] ?? "";
 
-    $requirements = $value[6] ?? "";
-    if (isset($value[7]) && strlen($value[7]) > 0)
-        $requirements = $requirements . ',' . $value[7];
+    $requirements = $value[7] ?? "";
     if (isset($value[8]) && strlen($value[8]) > 0)
         $requirements = $requirements . ',' . $value[8];
+    if (isset($value[9]) && strlen($value[9]) > 0)
+        $requirements = $requirements . ',' . $value[9];
 
     $project->setProjectDetails($name, $description, $collaborators, $requirements);
 
     if ($project->create()) {
-    $notifier->addNotification("Нов проект е създаден: " . $name);
-    header("Location: ../../frontend/manage_homepage/homepage.php");
-    } else {
-        header("Location: ../../frontend/create_project/create_project.html");
+        $notifier->addNotification("Нов проект е създаден: " . $name);
+        $isSuccesful = true;
     }
+}
+
+if ($isSuccesful) {
+    header("Location: ../../frontend/manage_homepage/homepage.php");
+} else {
+    header("Location: ../../frontend/create_project/add_multiple_projects.html");
 }
 ?>
