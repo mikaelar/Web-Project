@@ -34,5 +34,30 @@ class Project {
             return false;
         }
     }
+
+    public function delete($project_id) {
+        $stmt = $this->conn->prepare("DELETE FROM projects WHERE id = ?");
+        $stmt->bind_param("i", $project_id);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true;
+        } else {
+            echo "Error: " . $stmt->error;
+            $stmt->close();
+            return false;
+        }
+    }
+
+    public function update($project_id, $fields) {
+        foreach ($fields as $field => $value) {
+            $query = "UPDATE projects SET $field = ? WHERE id = ?";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param('si', $value, $project_id);
+            $stmt->execute();
+            $stmt->close();
+        }
+        return true;
+    }
 }
 ?>

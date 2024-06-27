@@ -12,8 +12,16 @@
             <h1>Software Requirements Management</h1>
         </div>
         <nav>
+            <ul>
+                <li><a href="../manage_homepage/homepage.php">Home</a></li>
+                <li><a href="../create_project/create_project.html">Add Project</a></li>
+                <li><a href="../settings/settings.php">Settings</a></li>
+                <li><a href="../user_stories/user_stories.php">Manage User Stories</a></li>
+            </ul>
         </nav>
-        
+        <div class="header-right">
+            <button id="logoutButton" onclick="location.href='../../backend/scripts/login_register/logout.php';">Logout</button>
+        </div>
     </header>
 
     <form action="../../backend/scripts/create_project.php" method="POST">

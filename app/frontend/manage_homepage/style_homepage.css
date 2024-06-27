@@ -1,5 +1,3 @@
-/* General styles */
-/* Добавен стил за дизайн */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f4f7;
@@ -42,7 +40,7 @@ nav ul li a {
 
 nav ul li a:hover {
     background-color: #21a1f1;
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .header-right {
@@ -57,7 +55,7 @@ nav ul li a:hover {
 .dropdown {
     position: relative;
     display: inline-block;
-    margin-right: 20px; /* Разстояние между бутоните в дясно */
+    margin-right: 20px;
 }
 
 .notification-btn, #helpButton, #logoutButton {
@@ -172,7 +170,7 @@ nav ul li a:hover {
 }
 
 .card:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 .card p {

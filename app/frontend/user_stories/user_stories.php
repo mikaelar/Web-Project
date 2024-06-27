@@ -12,14 +12,8 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Параметри за връзка с базата данни
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "form";
+$db = new Database();
 
-// Създаване на обект Database
-$db = new Database($servername, $username, $password, $dbname);
 $conn = $db->getConnection();
 
 // Проверка за валидност на връзката
@@ -68,8 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -90,6 +82,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .dropdown-content.show {
             display: block;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            position: center;
+            width: 100%;
         }
     </style>
 </head>
@@ -125,12 +123,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 
-        
     </header>
     <main>
         <section id="manage-user-stories">
             <h2>Manage User Stories</h2>
-            <form method="POST" action="userstories.php">
+            <form method="POST" action="user_stories.php">
                 <h3>Add User Story</h3>
                 <label for="userStoryTitle">Title:</label>
                 <input type="text" id="userStoryTitle" name="userStoryTitle" required>
@@ -140,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit">Add User Story</button>
             </form>
             
-            <form method="POST" action="userstories.php">
+            <form method="POST" action="user_stories.php">
                 <h3>Edit User Story</h3>
                 <label for="editUserStorySelect">Select User Story:</label>
                 <select id="editUserStorySelect" name="editUserStorySelect" required>
@@ -156,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit">Edit User Story</button>
             </form>
 
-            <form method="POST" action="userstories.php">
+            <form method="POST" action="user_stories.php">
                 <h3>Remove User Story</h3>
                 <label for="removeUserStorySelect">Select User Story:</label>
                 <select id="removeUserStorySelect" name="removeUserStorySelect" required>

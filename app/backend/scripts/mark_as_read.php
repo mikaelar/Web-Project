@@ -11,12 +11,8 @@ if (!isset($_SESSION['username'])) {
 use App\Backend\Classes\Database;
 use App\Backend\Classes\Notifier;;
 
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "form";
+$db = new Database();
 
-$db = new Database($servername, $dbusername, $dbpassword, $dbname);
 $notifier = new Notifier($db);
 
 if (isset($_GET['id'])) {

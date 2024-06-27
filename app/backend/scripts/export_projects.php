@@ -11,12 +11,8 @@ use App\Backend\Classes\Notifier;
  
 // parse the CSV or the Tabs and execute with for the code below (it will be very slow but technical debt was already taken)
 
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "form";
+$db = new Database();
 
-$db = new Database($servername, $dbusername, $dbpassword, $dbname);
 $sql = "SELECT * FROM projects";
 $result = $db->getConnection()->query($sql);
 $data = [["Имена", "Тема", "Описание и примерно разпределение", "Изисквания"]];

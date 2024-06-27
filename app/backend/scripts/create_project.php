@@ -9,13 +9,7 @@ use App\Backend\Classes\Database;
 use App\Backend\Classes\Project;
 use App\Backend\Classes\Notifier;
 
-
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "form";
-
-$db = new Database($servername, $dbusername, $dbpassword, $dbname);
+$db = new Database();
 
 $project = new Project($db);
 $notifier = new Notifier($db);
