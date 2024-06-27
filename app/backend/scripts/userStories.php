@@ -7,18 +7,7 @@ error_reporting(E_ALL);
 
 session_start();
 
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "form";
-
-// Създаване на връзка с базата данни
-$conn = new \mysqli($servername, $dbusername, $dbpassword, $dbname);
-
-// Проверка на връзката
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$db = new Database();
 
 // Обработка на POST заявки
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

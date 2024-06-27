@@ -192,3 +192,12 @@ input[type="text"], textarea, select {
 .dropdown-content.show {
     display: block;
 }
+
+footer {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 50%;
+}

@@ -10,15 +10,42 @@ if (!isset($_SESSION['username'])) {
 }
 
 use App\Backend\Classes\Database;
+use App\Backend\Classes\Project;
 use App\Backend\Classes\Notifier;
 
-// Database connection
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "form";
-$db = new Database($servername, $dbusername, $dbpassword, $dbname);
+$db = new Database();
+
 $conn = $db->getConnection();
+
+// Delete project
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project'])) {
+    $project_id = $_POST['id'];
+    $project = new Project($db);
+
+    if ($project->delete($project_id)) {
+        header("Location: ../manage_homepage/homepage.php");
+        exit();
+    } else {
+        echo "Проектът не може да бъде изтрит.";
+    }
+}
+
+// Project edit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
+    $project_id = $_POST['id'];
+    $fields = [];
+    foreach (['name', 'description', 'initial_requirements', 'collaborators'] as $field) {
+        if (isset($_POST[$field])) {
+            $fields[$field] = $_POST[$field];
+        }
+    }
+
+    $project = new Project($db);
+    $project->update($project_id, $fields);
+
+    header("Location: project_details.php?id=" . $project_id);
+    exit();
+}
 
 // Fetch project details if ID is provided in the URL
 $project = [];
@@ -42,10 +69,13 @@ if (isset($_GET['id'])) {
     echo "Грешка: Идентификаторът на проекта липсва.";
     exit();
 }
+
 // Fetch notifications
 $notifier = new Notifier($db);
 $notifications = $notifier->getNotifications();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -94,12 +124,50 @@ $notifications = $notifier->getNotifications();
         .balloon p {
             margin: 0;
         }
+
+        .edit-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+
+        .edit-form {
+            display: none;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .edit-form {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-left">
-            <h1>Software Requirments Management</h1>
+            <h1>Software Requirements Management</h1>
         </div>
         <nav>
             <ul>
@@ -128,40 +196,74 @@ $notifications = $notifier->getNotifications();
         </div>
     </header>
     <div class="content">
-    <div class="balloon">
-        <h2>Name</h2>
-        <p><?php echo htmlspecialchars($project['name']); ?></p>
-    </div>
+        <div class="balloon">
+            <h2>Name <span class="edit-icon" onclick="editSection('name')">✏️</span></h2>
+            <p id="name"><?php echo htmlspecialchars($project['name']); ?></p>
+            <form id="edit-name-form" class="edit-form" method="POST" action="project_details.php">
+                <input type="text" name="name" value="<?php echo htmlspecialchars($project['name']); ?>">
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('name')">Cancel</button>
+            </form>
+        </div>
 
-    <div class="balloon">
-        <h2>Description</h2>
-        <p><?php echo htmlspecialchars($project['description']); ?></p>
-    </div>
+        <div class="balloon">
+            <h2>Description <span class="edit-icon" onclick="editSection('description')">✏️</span></h2>
+            <p id="description"><?php echo htmlspecialchars($project['description']); ?></p>
+            <form id="edit-description-form" class="edit-form" method="POST" action="project_details.php">
+                <textarea name="description"><?php echo htmlspecialchars($project['description']); ?></textarea>
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('description')">Cancel</button>
+            </form>
+        </div>
 
-    <div class="balloon">
-        <h2>Requirements</h2>
-        <p><?php echo htmlspecialchars($project['initial_requirements']); ?></p>
-    </div>
+        <div class="balloon">
+            <h2>Requirements <span class="edit-icon" onclick="editSection('initial_requirements')">✏️</span></h2>
+            <p id="initial_requirements"><?php echo htmlspecialchars($project['initial_requirements']); ?></p>
+            <form id="edit-initial_requirements-form" class="edit-form" method="POST" action="project_details.php">
+                <textarea name="initial_requirements"><?php echo htmlspecialchars($project['initial_requirements']); ?></textarea>
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('initial_requirements')">Cancel</button>
+            </form>
+        </div>
 
-    <div class="balloon">
-        <h2>Collaborators</h2>
-        <p><?php echo htmlspecialchars($project['collaborators']); ?></p>
-    </div>
-</div>
+        <div class="balloon">
+            <h2>Collaborators <span class="edit-icon" onclick="editSection('collaborators')">✏️</span></h2>
+            <p id="collaborators"><?php echo htmlspecialchars($project['collaborators']); ?></p>
+            <form id="edit-collaborators-form" class="edit-form" method="POST" action="project_details.php">
+                <input type="text" name="collaborators" value="<?php echo htmlspecialchars($project['collaborators']); ?>">
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('collaborators')">Cancel</button>
+            </form>
+        </div>
 
+        <form method="POST" action="project_details.php">
+            <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+            <input type="hidden" name="delete_project" value="true">
+            <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this project?')">Delete Project</button>
+        </form>
+    </div>
     <footer>
         <p>&copy; 2024 Software Requirements Management</p>
-                        </footer>
+    </footer>
     <script src="main_page.js"></script>
     <script>
-        document.getElementById('notificationButton').onclick = function() {
-            var notificationList = document.getElementById('notificationList');
-            if (notificationList.style.display === 'none') {
-                notificationList.style.display = 'block';
-            } else {
-                notificationList.style.display = 'none';
-            }
-        };
+        function editSection(section) {
+            document.getElementById(section).style.display = 'none';
+            document.getElementById('edit-' + section + '-form').style.display = 'block';
+        }
+
+        function cancelEdit(section) {
+            document.getElementById(section).style.display = 'block';
+            document.getElementById('edit-' + section + '-form').style.display = 'none';
+        }
     </script>
 </body>
 </html>

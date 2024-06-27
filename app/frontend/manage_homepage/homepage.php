@@ -13,11 +13,9 @@ use App\Backend\Classes\Database;
 use App\Backend\Classes\Notifier;
 
 // Database connection
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "form";
-$db = new Database($servername, $dbusername, $dbpassword, $dbname);
+
+$db = new Database();
+
 $conn = $db->getConnection();
 
 // Fetch projects
@@ -143,4 +141,3 @@ h1 a:hover {
     </script>
 </body>
 </html>
-

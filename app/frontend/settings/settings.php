@@ -12,14 +12,8 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Параметри за връзка с базата данни
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "form";
+$db = new Database();
 
-// Създаване на обект Database
-$db = new Database($servername, $username, $password, $dbname);
 $conn = $db->getConnection();
 $notifications = [];
 

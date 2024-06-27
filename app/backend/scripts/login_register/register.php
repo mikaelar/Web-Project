@@ -9,12 +9,7 @@ error_reporting(E_ALL);
 use App\Backend\Classes\Database;
 use App\Backend\Classes\User;
 
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "form";
-
-$db = new Database($servername, $dbusername, $dbpassword, $dbname);
+$db = new Database();
 
 $user = new User($db);
 
