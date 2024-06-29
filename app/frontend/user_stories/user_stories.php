@@ -102,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <li><a href="../create_project/create_project.html">Add Project</a></li>
                 <li><a href="../settings/settings.php">Settings</a></li>
                 <li><a href="../user_stories/user_stories.php">Manage User Stories</a></li>
+                <li><a href="../planning_poker/planning_poker.php">Planning Poker</a></li>
             </ul>
         </nav>
         <div class="header-right">
