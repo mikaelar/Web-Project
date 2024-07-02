@@ -3,19 +3,16 @@
 namespace App\Backend\Classes;
 
 class Database {
+    private const DEFAULT_SERVERNAME = "localhost";
+    private const DEFAULT_USERNAME = "root";
+    private const DEFAULT_PASSWORD = "";
+    private const DEFAULT_DB_NAME = "form";
+
     private $conn;
-    private $servername;
-    private $username;
-    private $password;
-    private $dbname;
 
-    public function __construct($servername = "localhost", $username = "root", $password = "", $dbname = "form") {
-        $this->servername = $servername;
-        $this->username = $username;
-        $this->password = $password;
-        $this->dbname = $dbname;
+    public function __construct() {
 
-        $this->conn = new \mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        $this->conn = new \mysqli(self::DEFAULT_SERVERNAME, self::DEFAULT_USERNAME, self::DEFAULT_PASSWORD, self::DEFAULT_DB_NAME);
 
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);

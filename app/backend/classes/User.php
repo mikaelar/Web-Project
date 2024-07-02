@@ -5,6 +5,7 @@ use App\Backend\Classes\Database;
 
 class User {
     private $conn;
+    private $facultyNum;
     private $username;
     private $email;
     private $password;
@@ -14,15 +15,27 @@ class User {
         $this->conn = $db->getConnection();
     }
 
-    public function setUserDetails($username, $email, $password) {
-        $this->username = $username;
-        $this->email = $email;
+    public function setUserDetails($facultyNum, $username, $password, $email = null) {
+        $this->setFN($facultyNum);
+        $this->setUsername($username);
+        $this->setEmail($email);
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
     public function register() {
-        $stmt = $this->conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $this->username, $this->email, $this->password);
+        if (!$this->areAllMandatoryFieldsFilled()) {
+            echo "Not all mandatory fields have been filled. Currently you have:";
+            echo "Faculty num $this->facultyNum \n Username $this->username";
+            if ($this->password === null) {
+                echo "Missing password";
+            }
+            else
+                echo "Valid password";
+            return;
+        }
+
+        $stmt = $this->conn->prepare("INSERT INTO users (facultyNum, username, password, email) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $this->facultyNum, $this->username, $this->email, $this->password);
 
         if ($stmt->execute()) {
             echo "Вие се регистрирахте успешно.";
@@ -34,9 +47,20 @@ class User {
 
         $stmt->close();
     }
+    
 
     public function setUsername($username) {
-        $this->username = $username;
+        if (!$this->checkIfUserWithParameterExists("username", $username)) {
+            echo "Managed to set username";
+            $this->username = $username;
+        }
+    }
+
+    public function setEmail($email) {
+        if (!$this->checkIfUserWithParameterExists("email", $email)) {
+            echo "Managed to set Mail";
+            $this->email = $email;
+        }
     }
 
     public function authenticate($password) {
@@ -112,6 +136,32 @@ class User {
         }
 
         $stmt->close();
+    }
+
+    private function setFN($facultyNum) {
+        if (!$this->checkIfUserWithParameterExists("facultyNum", $facultyNum)) {
+            $this->facultyNum = $facultyNum;
+            echo "Managed to set FN";
+        }
+    }
+
+    private function checkIfUserWithParameterExists($parameterName, $parameter) {
+        $stmt = $this->conn->prepare("SELECT ? FROM users WHERE ? = ?");
+        $stmt->bind_param("sss", $parameterName, $parameterName, $parameter);
+        $stmt->execute();
+        // a user with the desired username already exists
+        $result = false;
+        if ($stmt->fetch()) {
+            echo "User with $parameterName $parameter already exists in the DB!";
+            $result = true;
+        }
+
+        $stmt->close();
+        return $result;
+    }
+
+    private function areAllMandatoryFieldsFilled() {
+        return $this->facultyNum != null && $this->password != null && $this->username != null;
     }
 }
 ?>
