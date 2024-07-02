@@ -17,7 +17,7 @@ class User {
 
     public function setUserDetails($facultyNum, $username, $password, $email = null) {
         $this->setFN($facultyNum);
-        $this->setUsername($username);
+        $this->setUsernameForCreation($username);
         $this->setEmail($email);
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
@@ -42,8 +42,12 @@ class User {
         $stmt->close();
     }
     
-
     public function setUsername($username) {
+        $this->username = $username;
+    }
+
+
+    public function setUsernameForCreation($username) {
         if (!$this->checkIfUserWithParameterExists("username", $username)) {
             $this->username = $username;
         } else
@@ -91,6 +95,9 @@ class User {
     }
 
     public function changePassword($current_password, $new_password) {
+        if ($current_password === $new_password)
+            return;
+
         $stmt = $this->conn->prepare("SELECT password FROM users WHERE username = ?");
         $stmt->bind_param("s", $this->username);
 
