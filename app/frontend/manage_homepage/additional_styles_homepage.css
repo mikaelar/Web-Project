@@ -1,0 +1,28 @@
+h1 {
+    font-size: 33px;
+    text-align: center;
+    margin-top: 50px; /* Примерно разстояние отгоре */
+    font-family: Arial, sans-serif;
+}
+
+h1 a {
+    font-size: 27px;
+    color: #0074d9; /* Цвят на линка */
+    text-decoration: none;
+    border-bottom: 1px dashed #0074d9; /* Пунктирано подчертаване */
+    transition: border-bottom 0.3s ease;
+    font-family: Arial, sans-serif;
+}
+footer {
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+}
+body {
+    padding-bottom: 60px; /* Добавете 10px допълнително за възможно допълнение */
+}
+
+h1 a:hover {
+    border-bottom: 1px solid #0074d9; /* Пълно подчертаване при ховър */
+}

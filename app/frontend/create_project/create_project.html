@@ -26,7 +26,7 @@
     </header>
 
     <form action="../../backend/scripts/create_project.php" method="POST">
-        <h2>Създаване на проект <a id="referer" href="add_multiple_projects.html">(или добави на куп?)</a></h2>
+        <h2>Създаване на проект <a id="referer" href="add_multiple_projects.html">(или добави накуп?)</a></h2>
         <div class="form-group">
             <input type="text" id="name" name="name" required>
             <span class="balloon">Име на проекта</span>
@@ -35,16 +35,6 @@
         <div class="form-group">
             <textarea id="description" name="description" rows="4" required></textarea>
             <span class="balloon">Кратко описание</span>
-        </div>
-
-        <div class="form-group">
-            <input type="text" id="collaborators" name="collaborators" required>
-            <span class="balloon">Колаборатори</span>
-        </div>
-
-        <div class="form-group">
-            <textarea id="initial_requirements" name="initial_requirements" rows="6"></textarea>
-            <span class="balloon">Изисквания</span>
         </div>
 
         <div id="buttons-wrapper">

@@ -13,7 +13,7 @@ use App\Backend\Classes\Notifier;;
 
 $db = new Database();
 
-$notifier = new Notifier($db);
+$notifier = new Notifier($db, $_SESSION['facultyNum']);
 
 if (isset($_GET['id'])) {
     $notifier->markAsRead(intval($_GET['id']));

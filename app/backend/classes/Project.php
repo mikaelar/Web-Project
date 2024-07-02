@@ -4,26 +4,23 @@ namespace App\Backend\Classes;
 use App\Backend\Classes\Database;
 
 class Project {
-    private $conn;
+    //private $conn;
     private $name;
     private $description;
-    private $collaborators;
-    private $initial_requirements;
+    private $created_at;
+    private $author;
 
-    public function __construct($db) {
-        $this->conn = $db->getConnection();
-    }
-
-    public function setProjectDetails($name, $description, $collaborators, $initial_requirements) {
+    public function __construct($name, $description, $created_at, $author) {
         $this->name = $name;
         $this->description = $description;
-        $this->collaborators = $collaborators;
-        $this->initial_requirements = $initial_requirements;
+        $this->created_at = $created_at;
+        $this->author = $author;
     }
 
-    public function create() {
-        $stmt = $this->conn->prepare("INSERT INTO projects (name, description, collaborators, initial_requirements) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $this->name, $this->description, $this->collaborators, $this->initial_requirements);
+    public function create($db) {
+        $query = "INSERT INTO projects (name, description, author, created_at) VALUES (?, ?, ?, ?)";
+        $stmt = $db->getConnection()->prepare($query);
+        $stmt->bind_param("ssss", $this->name, $this->description, $this->author, $this->created_at);
 
         if ($stmt->execute()) {
             $stmt->close();
@@ -35,8 +32,10 @@ class Project {
         }
     }
 
-    public function delete($project_id) {
-        $stmt = $this->conn->prepare("DELETE FROM projects WHERE id = ?");
+    // add collaborator, remove collaborator funcs for a project - NB - user has to be author to add others
+
+    public function delete($db, $project_id) {
+        $stmt = $db->getConnection()->prepare("DELETE FROM projects WHERE id = ?");
         $stmt->bind_param("i", $project_id);
 
         if ($stmt->execute()) {
@@ -49,10 +48,10 @@ class Project {
         }
     }
 
-    public function update($project_id, $fields) {
+    public function update($db, $project_id, $fields) {
         foreach ($fields as $field => $value) {
             $query = "UPDATE projects SET $field = ? WHERE id = ?";
-            $stmt = $this->conn->prepare($query);
+            $stmt = $db->getConnection()->prepare($query);
             $stmt->bind_param('si', $value, $project_id);
             $stmt->execute();
             $stmt->close();

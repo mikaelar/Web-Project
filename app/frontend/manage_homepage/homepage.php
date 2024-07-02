@@ -16,20 +16,35 @@ $db = new Database();
 
 $conn = $db->getConnection();
 
-// Fetch projects
 $projects = [];
+// Fetch projects (all if he is admin)
+// TODO - split the project on 2 groups - authorized and just participating
 $query = "SELECT id, name, description FROM projects";
-$result = $conn->query($query);
+if ($_SESSION['username'] !== "admin") {
+    $query = "SELECT id, name, description FROM projects WHERE id IN (SELECT project_id FROM participants_in_projects WHERE user_facultyNum = ?)";   
+}
+$stmt = $conn->prepare($query);
+if ($_SESSION['username'] !== "admin") {
+    $stmt->bind_param('s', $_SESSION['facultyNum']);
+}
+$stmt->execute();
+$stmt->store_result();
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+
+// Check if it fetches only my projects
+if ($stmt->num_rows > 0) {
+    while ($row = $stmt->fetch_assoc()) {
         $projects[] = $row;
     }
 }
 
-// Fetch notifications
-$notifier = new Notifier($db);
-$notifications = $notifier->getNotifications();
+// Fetch notifications (Check if it fetches only my notifications)
+$notifier = new Notifier($db, $_SESSION['facultyNum']);
+$notification = [];
+if ($_SESSION['username'] !== "admin") {
+    $notifications = $notifier->getNotifications();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,37 +53,8 @@ $notifications = $notifier->getNotifications();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link rel="stylesheet" href="style_homepage.css">
-    <style>
-
-h1 {
-    font-size: 33px;
-    text-align: center;
-    margin-top: 50px; /* Примерно разстояние отгоре */
-    font-family: Arial, sans-serif;
-}
-
-h1 a {
-    font-size: 27px;
-    color: #0074d9; /* Цвят на линка */
-    text-decoration: none;
-    border-bottom: 1px dashed #0074d9; /* Пунктирано подчертаване */
-    transition: border-bottom 0.3s ease;
-    font-family: Arial, sans-serif;
-}
-footer {
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-}
-body {
-    padding-bottom: 60px; /* Добавете 10px допълнително за възможно допълнение */
-}
-
-h1 a:hover {
-    border-bottom: 1px solid #0074d9; /* Пълно подчертаване при ховър */
-}
-    </style>
+    <link rel="stylesheet" href="additional_styles_homepage.css">
+    <script src="notifications_button.js" defer></script>
 <body>
     <header class="header">
         <div class="header-left">
@@ -127,16 +113,5 @@ h1 a:hover {
     <footer>
         <p>&copy; 2024 Software Requirements Management</p>
     </footer>
-    <script src="main_page.js"></script>
-    <script>
-        document.getElementById('notificationButton').onclick = function() {
-            var notificationList = document.getElementById('notificationList');
-            if (notificationList.style.display === 'none') {
-                notificationList.style.display = 'block';
-            } else {
-                notificationList.style.display = 'none';
-            }
-        };
-    </script>
 </body>
 </html>
