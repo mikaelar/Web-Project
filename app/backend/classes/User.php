@@ -24,18 +24,12 @@ class User {
 
     public function register() {
         if (!$this->areAllMandatoryFieldsFilled()) {
-            echo "Not all mandatory fields have been filled. Currently you have:";
-            echo "Faculty num $this->facultyNum \n Username $this->username";
-            if ($this->password === null) {
-                echo "Missing password";
-            }
-            else
-                echo "Valid password";
+            header("refresh:2;url=../../../frontend/login_register/register.html");
             return;
         }
 
         $stmt = $this->conn->prepare("INSERT INTO users (facultyNum, username, password, email) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $this->facultyNum, $this->username, $this->email, $this->password);
+        $stmt->bind_param("ssss", $this->facultyNum, $this->username, $this->password, $this->email);
 
         if ($stmt->execute()) {
             echo "Вие се регистрирахте успешно.";
@@ -51,16 +45,16 @@ class User {
 
     public function setUsername($username) {
         if (!$this->checkIfUserWithParameterExists("username", $username)) {
-            echo "Managed to set username";
             $this->username = $username;
-        }
+        } else
+            $this->username = null;
     }
 
     public function setEmail($email) {
         if (!$this->checkIfUserWithParameterExists("email", $email)) {
-            echo "Managed to set Mail";
             $this->email = $email;
-        }
+        } else 
+            $this->email = null;
     }
 
     public function authenticate($password) {
@@ -141,18 +135,24 @@ class User {
     private function setFN($facultyNum) {
         if (!$this->checkIfUserWithParameterExists("facultyNum", $facultyNum)) {
             $this->facultyNum = $facultyNum;
-            echo "Managed to set FN";
-        }
+        } else
+            $this->facultyNum = null;
     }
 
     private function checkIfUserWithParameterExists($parameterName, $parameter) {
-        $stmt = $this->conn->prepare("SELECT ? FROM users WHERE ? = ?");
-        $stmt->bind_param("sss", $parameterName, $parameterName, $parameter);
+        $validColumns = ['username', 'email', 'facultyNum']; // Add other valid column names as needed
+        if (!in_array($parameterName, $validColumns)) {
+            throw new Exception("Invalid parameter name: $parameterName");
+        }
+
+        $stmt = $this->conn->prepare("SELECT $parameterName FROM users WHERE $parameterName = ?");
+        $stmt->bind_param("s", $parameter);
         $stmt->execute();
+        $stmt->store_result();
         // a user with the desired username already exists
         $result = false;
-        if ($stmt->fetch()) {
-            echo "User with $parameterName $parameter already exists in the DB!";
+        if ($stmt->num_rows > 0) {
+            echo "Потребител с поле $parameterName $parameter вече съществува в БД!\n";
             $result = true;
         }
 
