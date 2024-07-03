@@ -6,7 +6,7 @@ interface iRequirement {
     public function getID();
     public function getHeading();
     public function getDescription();
-    public function getPrioirity();
+    public function getPriority();
     public function getComments();
     public function getDependantRequirements();
     public function getImpactedRequirements();
@@ -34,5 +34,8 @@ interface iRequirement {
     public function appendSubrequirement(& $requirement);
     public function removeSubrequirement(& $requirement);
     public function clearSubrequirements();
+
+    public function addRequirementToDB($db);
+    public function removeRequirementFromDB($db);
 }
 ?>

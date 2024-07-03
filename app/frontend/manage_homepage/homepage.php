@@ -33,14 +33,15 @@ $stmt->store_result();
 
 // Check if it fetches only my projects
 if ($stmt->num_rows > 0) {
-    while ($row = $stmt->fetch_assoc()) {
-        $projects[] = $row;
+    $stmt->bind_result($id, $name, $description);
+    while ($stmt->fetch()) {
+        $projects[] = ['id' => $id, 'name' => $name, 'description' => $description];
     }
 }
 
 // Fetch notifications (Check if it fetches only my notifications)
 $notifier = new Notifier($db, $_SESSION['facultyNum']);
-$notification = [];
+$notifications = [];
 if ($_SESSION['username'] !== "admin") {
     $notifications = $notifier->getNotifications();
 }

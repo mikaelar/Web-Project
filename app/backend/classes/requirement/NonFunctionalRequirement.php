@@ -6,9 +6,9 @@ use App\Backend\Classes\Requirement\adtRequirement;
 class NonFunctionalRequirement extends adtRequirement
 {
 
-    public function __construct($id, $heading, $description, $priority, $acceptanceCriteria, $metricName, $metricValue)
+    public function __construct($heading, $description, $priority, $acceptanceCriteria, $metricName, $metricValue, $author)
     {
-        parent::__construct($id, $heading, $description, $priority);
+        parent::__construct($heading, $description, $priority);
         $this->setAcceptanceCriteria($acceptanceCriteria);
         $this->setMetric($metricName, $metricValue); // pair of key/value
     }
@@ -59,10 +59,32 @@ class NonFunctionalRequirement extends adtRequirement
         $this->metric[$metricName] = $metricValue;
     }
 
-    public function addSubrequirement($id, $heading, $description, $priority, $acceptanceCriteria, $metricName, $metricValue)
+    public function addSubrequirement($heading, $description, $priority, $acceptanceCriteria, $metricName, $metricValue, $author)
     {
-        $requirement = new NonFunctionalRequirement($id, $heading, $description, $priority, $acceptanceCriteria, $metricName, $metricValue);
+        $requirement = new NonFunctionalRequirement($heading, $description, $priority, $acceptanceCriteria, $metricName, $metricValue, $author);
         $this->appendSubrequirement($requirement);
+    }
+
+    public function addRequirementToDB($db) {
+        // user story id and parent requirement?
+        $query = "INSERT INTO requirements (heading, description, type, author, metric_name, metric_value, acceptance_criteria) VALUES (?, ?, 1, ?, ?, ?, ?)";
+        $stmt = $db->getConnection()->prepare($query);
+        $stmt->bind_param("sissss", $this->heading, $this->description, $this->author, array_key_first($this->metric), array_values($this->metric)[0], $this->acceptanceCriteria);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true;
+        } else {
+            echo "Error: " . $stmt->error;
+            $stmt->close();
+            return false;
+        }
+
+        $this->id = $stmt->insert_id;
+    }
+
+    protected function retrieveID($db) {
+        parent::retrieveIDAbstractly($db, 1);
     }
 
     private $acceptanceCriteria;

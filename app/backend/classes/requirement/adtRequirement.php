@@ -8,12 +8,13 @@ use InvalidArgumentException;
 
 abstract class adtRequirement implements iRequirement
 {
-    public function __construct($id, $heading, $description, $priority)
+    public function __construct($heading, $description, $priority, $author)
     {
-        $this->setID($id);
+        $this->id = null;
         $this->setHeading($heading);
         $this->setDescription($description);
         $this->setPriority($priority);
+        $this->author = $author;
         // TODO - add a lazy initialization for the collections part - depending on how DB communication works
         $this->comments = []; // array of comments
         $this->dependsOnRequirements = self::generatePriorityCollection(); // array of priorities, which have arrays of requirements
@@ -36,7 +37,7 @@ abstract class adtRequirement implements iRequirement
         return $this->description;
     }
 
-    public function getPrioirity()
+    public function getPriority()
     {
         return $this->priority;
     }
@@ -100,6 +101,8 @@ abstract class adtRequirement implements iRequirement
         $priority = self::convertPriorityStringToObject($priority);
         $this->priority = $priority; // it is either enum or null
     }
+
+
 
     // private function loadComments()
     // {
@@ -264,12 +267,43 @@ abstract class adtRequirement implements iRequirement
         return $this->id === $other->getID();
     }
 
+    public abstract function addRequirementToDB($db);
+
+    protected function retrieveIDAbstractly($db, $type) {
+        $query = "SELECT id FROM projects WHERE heading = ? AND author = ? AND type = ?";
+        $stmt = $db->getConnection()->prepare($query);
+        $stmt->bind_param("ssi", $this->heading, $this->author, $type);
+
+        if (!$stmt->execute()) {
+            echo "Error: " . $stmt->error;
+        }
+        
+        $stmt->bind_result($id);
+        $stmt->fetch();
+        $this->id = $id;
+        $stmt->close();
+    }
+
+    public function removeRequirementFromDB($db) {
+        $query = "DELETE FROM requirements WHERE id = ?";
+        $stmt = $db->getConnection()->prepare($query);
+        if ($this->id === null) {
+            $this->retrieveID();
+        }
+        $stmt->bind_param("i", $this->id);
+        $stmt->execute();
+        if ($stmt->affected_rows == 0) {
+            echo "Настъпи проблем при изтриването на кортеж от таблицата изисквания, след като никой проект вече не реферира към него!";
+        }
+        $stmt->close();
+    }
 
     protected $id;
     protected $heading;
     protected $description;
     protected $priority; // this should be a string crucial, high, medium, low
     protected $comments;
+    protected $author;
     //protected $basedOnUserStories;
     protected $dependsOnRequirements;
     protected $impactsRequirements;

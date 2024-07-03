@@ -42,6 +42,20 @@ class User {
         $stmt->close();
     }
     
+    public function registerWithoutSwappingURLs() {
+        if (!$this->areAllMandatoryFieldsFilled()) {
+            return;
+        }
+
+        $stmt = $this->conn->prepare("INSERT INTO users (facultyNum, username, password, email) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $this->facultyNum, $this->username, $this->password, $this->email);
+
+        if (!$stmt->execute()) {
+            echo "Error: " . $stmt->error;
+        } 
+        $stmt->close();
+    }
+
     public function setUsername($username) {
         $this->username = $username;
     }

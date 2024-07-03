@@ -13,7 +13,7 @@ class Notifier {
     }
 
     // TODO - check if it works for multiple people!
-    public function addNotification($message, $date) {
+    public function addNotification($message, $date, $additionalReceiversFacultyNumsArr = null) {
         // create the base notification
         $query = "INSERT INTO notifications (message, date) VALUES (?, ?)";
         $stmt = $this->conn->prepare($query);
@@ -31,11 +31,28 @@ class Notifier {
             if ($stmt->affected_rows < 0) {
                 echo "Настъпи проблем при добавянето на нотификация към спомагателната таблица с нотификации.";
             }
+
+            if ($additionalReceiversFacultyNumsArr !== null) {
+                $this->addNotificationToRemainingReceivers($notificationID, $additionalReceiversFacultyNumsArr);
+            }
         } else {
             echo "Настъпи проблем при добавянето на нотификация към главната таблица нотификации.";
         }
 
         $stmt->close();
+    }
+
+    public function addNotificationToRemainingReceivers($notificationID, $receiversFacultyNums) {
+        // add a notification refferance for each listener
+        $query = "INSERT INTO notifications_for_users (notifications_id, users_facultyNum, is_read) VALUES (?, ?, 0)";
+        $stmt = $this->conn->prepare($query);
+        foreach ($receiversFacultyNums as $receiver) {
+            $stmt->bind_param("ss", $notificationID, $receiver);
+            $stmt->execute();
+            if ($stmt->affected_rows < 0) {
+                echo "Настъпи проблем при добавянето на нотификация към спомагателната таблица с нотификации.";
+            }
+        }
     }
 
     // check if it works for multiple people
