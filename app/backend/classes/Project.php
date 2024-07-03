@@ -27,8 +27,10 @@ class Project {
         $stmt->bind_param("ss", $this->name, $this->author);
         $stmt->execute();
         $stmt->store_result();
+
         if ($stmt->num_rows === 0) {
             $stmt->free_result();
+
             $query = "INSERT INTO projects (name, description, author, created_at) VALUES (?, ?, ?, ?)";
             $stmt = $db->getConnection()->prepare($query);
             $stmt->bind_param("ssss", $this->name, $this->description, $this->author, $this->created_at);
@@ -43,10 +45,13 @@ class Project {
                 return false;
             }
         } else {
+            echo "<pre>";
             echo "Авторът $this->author вече е създал проект със заглавие $this->name";
+            echo "</pre>";
         }
 
         $stmt->close();
+        return false;
     }
 
     public function retrieveID($db) {
@@ -79,11 +84,13 @@ class Project {
     public function addCollaborator($db, $collaboratorFN) {
         // role 0 means regular, 1 is PM
         // check if the user isn't already a collaborator!
-        if ($this->collaborators == null) {
-            $this->loadCollaborators($db);
-        }
-        if (array_search($collaboratorFN, $this->collaborators, true) === true) // the collaborator has already been added
-            return true;
+        $this->loadCollaborators($db);
+        $fM_collabs = implode(",", $this->collaborators);
+        if (array_search($collaboratorFN, $this->collaborators, true) !== false) {
+            echo "Такъв потребител вече е добавен!";
+            return false;
+        } // the collaborator has already been added
+            
 
         $query = "INSERT INTO participants_in_projects (user_facultyNum, project_id, role) VALUES (?, ?, 0)";
         $stmt = $db->getConnection()->prepare($query);
@@ -132,20 +139,35 @@ class Project {
     }
 
     public function linkRequirementToProject($db, $requirement) {
-        $query = "INSERT INTO requirements_in_projects (requirement_id, project_id, priority) VALUES (?, ?, ?)";
-        $stmt = $db->getConnection()->prepare($query);
+        
         if ($this->id === null) {
             $this->retrieveID();
         }
-        $stmt->bind_param("iii", $requirement->getID(), $this->id, $requirement->getPriority());
+        $requirementID = $requirement->getID();
+        
+        $query = "SELECT * FROM requirements_in_projects WHERE requirement_id = ? AND project_id = ?";
+        $stmt = $db->getConnection()->prepare($query);
+        $stmt->bind_param("ii", $requirementID, $this->id);
+        $stmt->execute();
+        $stmt->store_result();
 
-        if ($stmt->execute()) {
-            $stmt->close();
-            return true;
-        } else {
-            echo "Error: " . $stmt->error;
-            $stmt->close();
-            return false;
+        // check if it was already linked - if it was not, link it
+        if ($stmt->num_rows === 0) {
+            $stmt->free_result();
+
+            $query = "INSERT INTO requirements_in_projects (requirement_id, project_id, priority) VALUES (?, ?, ?)";
+            $stmt = $db->getConnection()->prepare($query);
+            $priority = $requirement->getPriority();
+            $stmt->bind_param("iii", $requirementID, $this->id, $priority);
+
+            if ($stmt->execute()) {
+                $stmt->close();
+                return true;
+            } else {
+                echo "Error: " . $stmt->error;
+                $stmt->close();
+                return false;
+            }
         }
     }
 
@@ -155,14 +177,16 @@ class Project {
         if ($this->id === null) {
             $this->retrieveID();
         }
-        $stmt->bind_param("ii", $requirement->getID(), $this->id);
+
+        $requirementID = $requirement->getID();
+        $stmt->bind_param("ii", $requirementID, $this->id);
 
         $stmt->execute();
         // check how many projects this requirement is still used in
         if ($stmt->affected_rows > 0) {
             $query = "SELECT * FROM requirements_in_projects WHERE requirement_id = ?";
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param("i", $requirement->getID());
+            $stmt->bind_param("i", $requirementID);
             $stmt->execute();
             $stmt->store_result();
 

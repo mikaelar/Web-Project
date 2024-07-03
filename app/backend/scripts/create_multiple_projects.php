@@ -74,7 +74,7 @@ function handleInput() {
     }
 }
 
-// remake our format to include FN-s, teachers also
+// remake our format to include FN-s
 // all columns + FN -> FNs, names, title, description, requirements
 function handleTeachersFormat($tabTextArray) {
     $tabTextArraySplit = [];
@@ -238,7 +238,8 @@ function addCsvValuesToDB($csvValues, $db) {
         $date = date('Y-m-d H:i:s');
         
         $project = new Project($name, $description, $date, $author);
-        $project->create($db);
+        if (!$project->create($db)) // the project has already been created beforehand
+            continue;
         
         $date = date('Y-m-d H:i:s');
         $notifier = new Notifier($db, $facultyNums[0]);
@@ -248,32 +249,38 @@ function addCsvValuesToDB($csvValues, $db) {
             $isSuccesful = true;
         }
         
-        $arrLen = count($value);
-        echo "$arrLen";
-        echo "Стойности за изисквания $value[4], $value[5], $value[6]";
-
         $firstRequirementDescription = $value[4] ?? "";
-        $firstRequirement = new FunctionalRequirement("Изисквания към участник 1", $firstRequirementDescription, "crucial", $facultyNums[0]);
-        $firstRequirement->addRequirementToDB($db);
-        $project->linkRequirementToProject($db, $firstRequirement);
-
-        // create a requirement, add an author to it, add it to the DB and link it to the project
+        if ($firstRequirementDescription !== "") {
+            $firstRequirement = new FunctionalRequirement("Изисквания към участник 1", $firstRequirementDescription, "crucial", $facultyNums[0]);
+            $firstRequirement->addRequirementToDB($db);
+            $project->linkRequirementToProject($db, $firstRequirement);
+        }
 
         $secondRequirementDescription = $value[5] ?? "";
-        $secondRequirement = new FunctionalRequirement("Изисквания към участник 2", $secondRequirementDescription, "crucial", $facultyNums[0]);
-        $secondRequirement->addRequirementToDB($db);
-        $project->linkRequirementToProject($db, $secondRequirement);
+        if ($secondRequirementDescription !== "") {
+            $secondRequirement = new FunctionalRequirement("Изисквания към участник 2", $secondRequirementDescription, "crucial", $facultyNums[0]);
+            $secondRequirement->addRequirementToDB($db);
+            $project->linkRequirementToProject($db, $secondRequirement);
+        }        
 
         $thirdRequirementDescription = $value[6] ?? "";
-        $thirdRequirement = new FunctionalRequirement("Изисквания към участник 3", $thirdRequirementDescription, "crucial", $facultyNums[0]);
-        $thirdRequirement->addRequirementToDB($db);
-        $project->linkRequirementToProject($db, $thirdRequirement);
-        // TODO check if it works
+        if ($thirdRequirementDescription !== "") {
+            $thirdRequirement = new FunctionalRequirement("Изисквания към участник 3", $thirdRequirementDescription, "crucial", $facultyNums[0]);
+            $thirdRequirement->addRequirementToDB($db);
+            $project->linkRequirementToProject($db, $thirdRequirement);
+
+            // the code below should not throw an error, as the linking should be skipped - it doesn't hooray!
+            // $thirdRequirement->addRequirementToDB($db);
+            //$project->linkRequirementToProject($db, $thirdRequirement);
+        }
+        
     }
     
     if ($isSuccesful) {
         header("Location: ../../frontend/manage_homepage/homepage.php");
     } else {
+        echo "Не бяха добавени нови проекти. Или не участвате в тях или вече всичките проекти са били добавени!";
+        sleep(1);
         header("Location: ../../frontend/create_project/add_multiple_projects.html");
     }
 }

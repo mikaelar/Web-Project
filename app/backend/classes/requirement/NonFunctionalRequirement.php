@@ -67,20 +67,29 @@ class NonFunctionalRequirement extends adtRequirement
 
     public function addRequirementToDB($db) {
         // user story id and parent requirement?
-        $query = "INSERT INTO requirements (heading, description, type, author, metric_name, metric_value, acceptance_criteria) VALUES (?, ?, 1, ?, ?, ?, ?)";
+        $query = "SELECT * FROM requirements WHERE heading = ? AND author = ?";
         $stmt = $db->getConnection()->prepare($query);
-        $stmt->bind_param("sissss", $this->heading, $this->description, $this->author, array_key_first($this->metric), array_values($this->metric)[0], $this->acceptanceCriteria);
+        $stmt->bind_param("ss", $this->heading, $this->author);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows === 0) {
+            $query = "INSERT INTO requirements (heading, description, type, author, metric_name, metric_value, acceptance_criteria) VALUES (?, ?, 1, ?, ?, ?, ?)";
+            $stmt = $db->getConnection()->prepare($query);
+            $metricName = array_key_first($this->metric);
+            $metricValue = array_values($this->metric)[0];
+            $stmt->bind_param("ssssss", $this->heading, $this->description, $this->author, $metricName, $metricValue, $this->acceptanceCriteria);
 
-        if ($stmt->execute()) {
-            $stmt->close();
-            return true;
-        } else {
-            echo "Error: " . $stmt->error;
-            $stmt->close();
-            return false;
+            if ($stmt->execute()) {
+                $stmt->close();
+                $this->id = $stmt->insert_id;
+                return true;
+            } else {
+                echo "Error: " . $stmt->error;
+                $stmt->close();
+                return false;
+            }
         }
-
-        $this->id = $stmt->insert_id;
     }
 
     protected function retrieveID($db) {

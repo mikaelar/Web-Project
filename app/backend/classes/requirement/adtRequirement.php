@@ -39,7 +39,7 @@ abstract class adtRequirement implements iRequirement
 
     public function getPriority()
     {
-        return $this->priority;
+        return self::convertPriorityObjectToValue($this->priority);
     }
 
     // maybe forbid these fields from getting extracted (now they are returned as copies, note that (but the objects inside are refs))

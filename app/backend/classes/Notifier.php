@@ -24,13 +24,8 @@ class Notifier {
             $notificationID = $stmt->insert_id;
 
             // add a row in the notifications for users table (relation many to many)
-            $query = "INSERT INTO notifications_for_users (notifications_id, users_facultyNum, is_read) VALUES (?, ?, 0)";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bind_param("ss", $notificationID, $this->facultyNum);
-            $stmt->execute();
-            if ($stmt->affected_rows < 0) {
-                echo "Настъпи проблем при добавянето на нотификация към спомагателната таблица с нотификации.";
-            }
+            $receiver = [$this->facultyNum];
+            $this->addNotificationToRemainingReceivers($notificationID, $receiver);
 
             if ($additionalReceiversFacultyNumsArr !== null) {
                 $this->addNotificationToRemainingReceivers($notificationID, $additionalReceiversFacultyNumsArr);
@@ -44,7 +39,7 @@ class Notifier {
 
     public function addNotificationToRemainingReceivers($notificationID, $receiversFacultyNums) {
         // add a notification refferance for each listener
-        $query = "INSERT INTO notifications_for_users (notifications_id, users_facultyNum, is_read) VALUES (?, ?, 0)";
+        $query = "INSERT INTO notifications_for_users (notifications_id, users_facultyNum) VALUES (?, ?)";
         $stmt = $this->conn->prepare($query);
         foreach ($receiversFacultyNums as $receiver) {
             $stmt->bind_param("ss", $notificationID, $receiver);
