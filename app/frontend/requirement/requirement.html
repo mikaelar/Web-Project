@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Начална страница</title>
+    <link rel="stylesheet" href="../project_details/project_details.css">
+    <link rel="stylesheet" href="specific_requirement_styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../manage_homepage/homepage.php">Home</a></li>
+                <li><a href="../create_project/create_project.html">Add Project</a></li>
+                <li><a href="../settings/settings.php">Settings</a></li>
+                <li><a href="../user_stories/user_stories.php">Manage User Stories</a></li>
+                <li><a href="../planning_poker/planning_poker.php">Planning Poker</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <button id="logoutButton" onclick="location.href='../../backend/scripts/login_register/logout.php';">Logout</button>
+        </div>
+    </header>
+    <div class="content">
+        <div class="balloon">
+            <h2>Name <span class="edit-icon" onclick="editSection('name')">✏️</span></h2>
+            <p id="name"><?php echo htmlspecialchars($project['name']); ?></p>
+            <form id="edit-name-form" class="edit-form" method="POST" action="project_details.php">
+                <input type="text" name="name" value="<?php echo htmlspecialchars($project['name']); ?>">
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('name')">Cancel</button>
+            </form>
+        </div>
+
+        <div class="balloon">
+            <h2>Description <span class="edit-icon" onclick="editSection('description')">✏️</span></h2>
+            <p id="description"><?php echo htmlspecialchars($project['description']); ?></p>
+            <form id="edit-description-form" class="edit-form" method="POST" action="project_details.php">
+                <textarea name="description"><?php echo htmlspecialchars($project['description']); ?></textarea>
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('description')">Cancel</button>
+            </form>
+        </div>
+                        <!--FROM here-->
+        <div class="balloon">
+            <h2>Author</h2>
+            <p id="author"><?php 
+            $author = $project['author'];
+            echo htmlspecialchars($project['author']); 
+            ?></p>
+        </div>
+
+        <div class="balloon">
+            <h2>Creation date </h2>
+            <p id="created_at"><?php echo htmlspecialchars($project['created_at']); ?></p>
+        </div>
+<!--TILL here-->
+        <div class="balloon">
+            <h2>Requirements <span class="edit-icon" onclick="editSection('initial_requirements')">✏️</span></h2>
+            <p id="initial_requirements"><?php echo htmlspecialchars($project['initial_requirements']); ?></p>
+            <form id="edit-initial_requirements-form" class="edit-form" method="POST" action="project_details.php">
+                <textarea name="initial_requirements"><?php echo htmlspecialchars($project['initial_requirements']); ?></textarea>
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('initial_requirements')">Cancel</button>
+            </form>
+        </div>
+
+        <div class="balloon">
+            <h2>Collaborators <span class="edit-icon" onclick="editSection('collaborators')">✏️</span></h2>
+            <p id="collaborators"><?php echo htmlspecialchars($project['collaborators']); ?></p>
+            <form id="edit-collaborators-form" class="edit-form" method="POST" action="project_details.php">
+                <input type="text" name="collaborators" value="<?php echo htmlspecialchars($project['collaborators']); ?>">
+                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
+                <input type="hidden" name="update_project" value="true">
+                <button type="submit">Save</button>
+                <button type="button" onclick="cancelEdit('collaborators')">Cancel</button>
+            </form>
+        </div>
+
+        <!--Doesn't save the project id-->
+        <a href="../project_details/project_details.php"><button>Обратно към проекта</button></a>
+    </div>
+    <footer>
+        <p>&copy; 2024 Software Requirements Management</p>
+    </footer>
+    <script src="main_page.js"></script>
+    <script>
+        function editSection(section) {
+            document.getElementById(section).style.display = 'none';
+            document.getElementById('edit-' + section + '-form').style.display = 'block';
+        }
+
+        function cancelEdit(section) {
+            document.getElementById(section).style.display = 'block';
+            document.getElementById('edit-' + section + '-form').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -253,7 +253,7 @@ class Project {
         }
     }
 
-    public function update($db, $project_id, $fields) {
+    public static function update($db, $project_id, $fields) {
         foreach ($fields as $field => $value) {
             $query = "UPDATE projects SET $field = ? WHERE id = ?";
             $stmt = $db->getConnection()->prepare($query);
@@ -262,6 +262,20 @@ class Project {
             $stmt->close();
         }
         return true;
+    }
+
+    public static function retrieveProjectInfo($db, $project_id) {
+        $query = "SELECT name, description, author, created_at FROM projects WHERE id = ?";
+        $stmt = $db->getConnection()->prepare($query);
+        $stmt->bind_param("i", $project_id);
+        $stmt->execute();
+        $stmt->bind_result($name, $description, $author, $created_at);
+        if ($stmt->fetch()) {
+            return new Project($name, $description, $created_at, $author );
+        }
+        else {
+            return null;
+        }
     }
 
     public function deleteProjectFromDB($db) {
