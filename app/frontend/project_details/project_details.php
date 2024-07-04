@@ -52,8 +52,7 @@ $project = [];
 if (isset($_GET['id'])) {
     $project_id = $_GET['id'];
 
-    // Prepare and bind SELECT statement
-    $query = "SELECT name, description, collaborators, initial_requirements FROM projects WHERE id = ?";
+    $query = "SELECT name, description, author, created_at FROM projects WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $project_id);
     $stmt->execute();
@@ -71,7 +70,7 @@ if (isset($_GET['id'])) {
 }
 
 // Fetch notifications
-$notifier = new Notifier($db);
+$notifier = new Notifier($db, $_SESSION['facultyNum']);
 $notifications = $notifier->getNotifications();
 ?>
 
@@ -220,7 +219,20 @@ $notifications = $notifier->getNotifications();
                 <button type="button" onclick="cancelEdit('description')">Cancel</button>
             </form>
         </div>
+                        <!--FROM here-->
+        <div class="balloon">
+            <h2>Author</h2>
+            <p id="author"><?php 
+            $author = $project['author'];
+            echo htmlspecialchars($project['author']); 
+            ?></p>
+        </div>
 
+        <div class="balloon">
+            <h2>Creation date </h2>
+            <p id="created_at"><?php echo htmlspecialchars($project['created_at']); ?></p>
+        </div>
+<!--TILL here-->
         <div class="balloon">
             <h2>Requirements <span class="edit-icon" onclick="editSection('initial_requirements')">✏️</span></h2>
             <p id="initial_requirements"><?php echo htmlspecialchars($project['initial_requirements']); ?></p>

@@ -19,5 +19,6 @@ if (isset($_GET['id'])) {
     $notifier->markAsRead(intval($_GET['id']));
 }
 
+// to go back to current page, we need to store the path in the session and update it when we change scripts
 header("Location: ../../frontend/manage_homepage/homepage.php");
 ?>
