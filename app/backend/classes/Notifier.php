@@ -13,11 +13,11 @@ class Notifier {
     }
 
     // TODO - check if it works for multiple people!
-    public function addNotification($message, $date, $additionalReceiversFacultyNumsArr = null) {
+    public function addNotification($message, $date, $project_id = null, $additionalReceiversFacultyNumsArr = null) {
         // create the base notification
-        $query = "INSERT INTO notifications (message, date) VALUES (?, ?)";
+        $query = "INSERT INTO notifications (message, project_id, date) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("ss", $message, $date);
+        $stmt->bind_param("sis", $message, $project_id, $date);
         $stmt->execute();
         if ($stmt->affected_rows > 0) {
             // get the id of newly created notification
@@ -52,9 +52,7 @@ class Notifier {
 
     // check if it works for multiple people
     public function getNotifications() {
-        $query = "SELECT id, message, date FROM notifications WHERE id IN (SELECT notifications_id FROM notifications_for_users WHERE users_facultyNum = ?)";
-        $stmt = $this->conn->prepare("SELECT id, project_id, message FROM notifications WHERE is_read = 0");
-        // combine queries
+        $query = "SELECT id, project_id, message, date FROM notifications WHERE id IN (SELECT notifications_id FROM notifications_for_users WHERE users_facultyNum = ?)";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param('s', $this->facultyNum);
         $stmt->execute();
