@@ -3,6 +3,8 @@ namespace App\Backend\Classes;
 
 use App\Backend\Classes\Notifier;
 use App\Backend\Classes\Database;
+use App\Backend\Classes\Requirement\FunctionalRequirement;
+use App\Backend\Classes\Requirement\NonFunctionalRequirement;
 
 class Project {
     //private $conn;
@@ -12,6 +14,7 @@ class Project {
     private $created_at;
     private $author;
     private $collaborators;
+    private $requirements;
 
     public function __construct($name, $description, $created_at, $author) {
         $this->name = $name;
@@ -20,6 +23,7 @@ class Project {
         $this->author = $author;
         $this->id = null;
         $this->collaborators = null;
+        $this->requirements = null;
     }
 
     public function create($db) {
@@ -204,6 +208,34 @@ class Project {
         $stmt->close();
     }
 
+    private function loadRequirements($db) {
+        if ($this->id === null) {
+            $this->retrieveID();
+        }
+
+        $query = "SELECT id, heading, description, type, metric_name, metric_value, acceptance_criteria, author 
+        FROM requirements 
+        JOIN requirements_in_projects ON requirements.id = requirements_in_projects.requirement_id
+        WHERE id 
+        IN (SELECT requirement_id FROM requirements_in_projects WHERE project_id = ?)";
+        $stmt = $db->getConnection()->prepare($query);
+        $stmt->bind_param("i", $this->id);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($id, $heading, $description, $type, $metric_name, $metric_value, $acceptance_criteria, $author, $priority);
+
+        $requirements = [];
+        while ($stmt->fetch()) {
+            if ($type === 0) {
+                $requirements[] = new FunctionalRequirement($heading, $description, $priority, $author);
+            }
+            else {
+                $requirements[] = new NonFunctionalRequirement($heading, $description, $priority, $acceptance_criteria, $metric_name, $metric_value, $author);
+            }
+        }
+
+        $stmt->close();
+    }
     //  TODO add a user story to project / remove a user story (analogically to the one above)
 
 
@@ -275,6 +307,16 @@ class Project {
         while ($stmt->fetch()) {
             $this->collaborators[] = $collab;
         }
+    }
+
+    public function getCollaborators($db) {
+        $this->loadCollaborators($db);
+        return $this->collaborators;
+    }
+
+    public function getRequirements($db) {
+        $this->loadRequirements($db);
+        return $this->requirements;
     }
 }
 ?>

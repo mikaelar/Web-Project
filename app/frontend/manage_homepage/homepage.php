@@ -41,11 +41,7 @@ if ($stmt->num_rows > 0) {
 
 // Fetch notifications (Check if it fetches only my notifications)
 $notifier = new Notifier($db, $_SESSION['facultyNum']);
-//$notifications = [];
 $notifications = $notifier->getNotifications();
-// if ($_SESSION['username'] !== "admin") {
-//     $notifications = $notifier->getNotifications();
-// }
 
 ?>
 <!DOCTYPE html>

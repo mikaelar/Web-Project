@@ -19,7 +19,7 @@ $notifications = [];
 
 
 // Извличане на уведомления
-$notifier = new Notifier($db);
+$notifier = new Notifier($db, $_SESSION['facultyNum']);
 $notifications = $notifier->getNotifications();
 // Проверка за валидност на връзката
 if (!$conn) {
