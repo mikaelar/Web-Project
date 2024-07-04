@@ -114,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php foreach ($notifications as $notification): ?>
                     <li>
                       <span class="notification-message"><?php echo htmlspecialchars($notification['message']); ?></span>
+                      <a href="../../frontend/project_details/project_details.php?id=<?php echo $notification['project_id']; ?>">View Project</a>
                       <a class="mark-as-read" href="../../backend/scripts/mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
                     </li>
                 <?php endforeach; ?>
