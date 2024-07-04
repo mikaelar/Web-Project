@@ -34,14 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
     $project_id = $_POST['id'];
     $fields = [];
-    foreach (['name', 'description', 'initial_requirements', 'collaborators'] as $field) {
+    foreach (['name', 'description'] as $field) {
         if (isset($_POST[$field])) {
             $fields[$field] = $_POST[$field];
         }
     }
 
-    $project = new Project($db);
-    $project->update($project_id, $fields);
+    Project::update($db, $project_id, $fields);
 
     header("Location: project_details.php?id=" . $project_id);
     exit();
@@ -51,7 +50,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
 $project = [];
 if (isset($_GET['id'])) {
     $project_id = $_GET['id'];
+    $_SESSION['projectID'] = $project_id;
 
+    $query = "SELECT name, description, author, created_at FROM projects WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $project_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $project = $result->fetch_assoc();
+    } else {
+        echo "Проектът не е намерен.";
+        exit();
+    }
+} else if (isset($_SESSION['projectID'])) {
     $query = "SELECT name, description, author, created_at FROM projects WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $project_id);
@@ -218,7 +231,7 @@ $notifications = $notifier->getNotifications();
                 <button type="button" onclick="cancelEdit('description')">Cancel</button>
             </form>
         </div>
-                        <!--FROM here-->
+
         <div class="balloon">
             <h2>Author</h2>
             <p id="author"><?php 
@@ -231,29 +244,12 @@ $notifications = $notifier->getNotifications();
             <h2>Creation date </h2>
             <p id="created_at"><?php echo htmlspecialchars($project['created_at']); ?></p>
         </div>
-<!--TILL here-->
         <div class="balloon">
-            <h2>Requirements <span class="edit-icon" onclick="editSection('initial_requirements')">✏️</span></h2>
-            <p id="initial_requirements"><?php echo htmlspecialchars($project['initial_requirements']); ?></p>
-            <form id="edit-initial_requirements-form" class="edit-form" method="POST" action="project_details.php">
-                <textarea name="initial_requirements"><?php echo htmlspecialchars($project['initial_requirements']); ?></textarea>
-                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
-                <input type="hidden" name="update_project" value="true">
-                <button type="submit">Save</button>
-                <button type="button" onclick="cancelEdit('initial_requirements')">Cancel</button>
-            </form>
+            <h2>Requirements <span class="edit-icon"><a href="../requirement/requirement.html">✏️</a></span></h2>
         </div>
 
         <div class="balloon">
-            <h2>Collaborators <span class="edit-icon" onclick="editSection('collaborators')">✏️</span></h2>
-            <p id="collaborators"><?php echo htmlspecialchars($project['collaborators']); ?></p>
-            <form id="edit-collaborators-form" class="edit-form" method="POST" action="project_details.php">
-                <input type="text" name="collaborators" value="<?php echo htmlspecialchars($project['collaborators']); ?>">
-                <input type="hidden" name="id" value="<?php echo $project_id; ?>">
-                <input type="hidden" name="update_project" value="true">
-                <button type="submit">Save</button>
-                <button type="button" onclick="cancelEdit('collaborators')">Cancel</button>
-            </form>
+            <h2>Collaborators <span class="edit-icon"><a href="../collaborators/collaborators.html">✏️</a></span></h2>
         </div>
 
         <form method="POST" action="project_details.php">
