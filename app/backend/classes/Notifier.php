@@ -6,19 +6,19 @@ use App\Backend\Classes\Database;
 class Notifier {
     private $conn;
 
-    public function __construct($db) {
+    public function __construct(Database $db) {
         $this->conn = $db->getConnection();
     }
 
-    public function addNotification($message) {
-        $stmt = $this->conn->prepare("INSERT INTO notifications (message, is_read) VALUES (?, 0)");
-        $stmt->bind_param("s", $message);
+    public function addNotification($message, $project_id) {
+        $stmt = $this->conn->prepare("INSERT INTO notifications (message, project_id, is_read) VALUES (?, ?, 0)");
+        $stmt->bind_param("si", $message, $project_id);
         $stmt->execute();
         $stmt->close();
     }
 
     public function getNotifications() {
-        $stmt = $this->conn->prepare("SELECT id, message FROM notifications WHERE is_read = 0");
+        $stmt = $this->conn->prepare("SELECT id, project_id, message FROM notifications WHERE is_read = 0");
         $stmt->execute();
         $result = $stmt->get_result();
         $notifications = $result->fetch_all(MYSQLI_ASSOC);
