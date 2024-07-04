@@ -16,8 +16,4 @@ $user = new User($db);
 
 $user->setUsername($_POST['username']);
 $user->authenticate($_POST['password']);
-
-if ($user->isAuthenticated()) {
-    $_SESSION['username'] = $_POST['username'];
-}
 ?>

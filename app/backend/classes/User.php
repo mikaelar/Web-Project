@@ -5,6 +5,7 @@ use App\Backend\Classes\Database;
 
 class User {
     private $conn;
+    private $facultyNum;
     private $username;
     private $email;
     private $password;
@@ -14,15 +15,21 @@ class User {
         $this->conn = $db->getConnection();
     }
 
-    public function setUserDetails($username, $email, $password) {
-        $this->username = $username;
-        $this->email = $email;
+    public function setUserDetails($facultyNum, $username, $password, $email = null) {
+        $this->setFN($facultyNum);
+        $this->setUsernameForCreation($username);
+        $this->setEmail($email);
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
     public function register() {
-        $stmt = $this->conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $this->username, $this->email, $this->password);
+        if (!$this->areAllMandatoryFieldsFilled()) {
+            header("refresh:2;url=../../../frontend/login_register/register.html");
+            return;
+        }
+
+        $stmt = $this->conn->prepare("INSERT INTO users (facultyNum, username, password, email) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $this->facultyNum, $this->username, $this->password, $this->email);
 
         if ($stmt->execute()) {
             echo "Вие се регистрирахте успешно.";
@@ -34,25 +41,55 @@ class User {
 
         $stmt->close();
     }
+    
+    public function registerWithoutSwappingURLs() {
+        if (!$this->areAllMandatoryFieldsFilled()) {
+            return;
+        }
+
+        $stmt = $this->conn->prepare("INSERT INTO users (facultyNum, username, password, email) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $this->facultyNum, $this->username, $this->password, $this->email);
+
+        if (!$stmt->execute()) {
+            echo "Error: " . $stmt->error;
+        } 
+        $stmt->close();
+    }
 
     public function setUsername($username) {
         $this->username = $username;
     }
 
+
+    public function setUsernameForCreation($username) {
+        if (!$this->checkIfUserWithParameterExists("username", $username)) {
+            $this->username = $username;
+        } else
+            $this->username = null;
+    }
+
+    public function setEmail($email) {
+        if (!$this->checkIfUserWithParameterExists("email", $email)) {
+            $this->email = $email;
+        } else 
+            $this->email = null;
+    }
+
     public function authenticate($password) {
-        $stmt = $this->conn->prepare("SELECT username, password FROM users WHERE username = ?");
+        $stmt = $this->conn->prepare("SELECT username, password, facultyNum FROM users WHERE username = ?");
         $stmt->bind_param("s", $this->username);
 
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($username, $hashed_password);
+            $stmt->bind_result($username, $hashed_password, $facultyNum);
             $stmt->fetch();
 
             if (password_verify($password, $hashed_password)) {
                 $this->authenticated = true;
                 $_SESSION['username'] = $username;
+                $_SESSION['facultyNum'] = $facultyNum;
                 header("refresh:1;url=../../../frontend/manage_homepage/homepage.php");
                 exit();
             } else {
@@ -73,6 +110,9 @@ class User {
     }
 
     public function changePassword($current_password, $new_password) {
+        if ($current_password === $new_password)
+            return;
+
         $stmt = $this->conn->prepare("SELECT password FROM users WHERE username = ?");
         $stmt->bind_param("s", $this->username);
 
@@ -112,6 +152,38 @@ class User {
         }
 
         $stmt->close();
+    }
+
+    private function setFN($facultyNum) {
+        if (!$this->checkIfUserWithParameterExists("facultyNum", $facultyNum)) {
+            $this->facultyNum = $facultyNum;
+        } else
+            $this->facultyNum = null;
+    }
+
+    private function checkIfUserWithParameterExists($parameterName, $parameter) {
+        $validColumns = ['username', 'email', 'facultyNum']; // Add other valid column names as needed
+        if (!in_array($parameterName, $validColumns)) {
+            throw new Exception("Invalid parameter name: $parameterName");
+        }
+
+        $stmt = $this->conn->prepare("SELECT $parameterName FROM users WHERE $parameterName = ?");
+        $stmt->bind_param("s", $parameter);
+        $stmt->execute();
+        $stmt->store_result();
+        // a user with the desired username already exists
+        $result = false;
+        if ($stmt->num_rows > 0) {
+            echo "Потребител с поле $parameterName $parameter вече съществува в БД!\n";
+            $result = true;
+        }
+
+        $stmt->close();
+        return $result;
+    }
+
+    private function areAllMandatoryFieldsFilled() {
+        return $this->facultyNum != null && $this->password != null && $this->username != null;
     }
 }
 ?>

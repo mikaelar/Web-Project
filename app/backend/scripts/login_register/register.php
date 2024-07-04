@@ -13,6 +13,6 @@ $db = new Database();
 
 $user = new User($db);
 
-$user->setUserDetails($_POST['username'], $_POST['email'], $_POST['password']);
+$user->setUserDetails($_POST['facultyNum'], $_POST['username'], $_POST['password'], $_POST['email']);
 $user->register();
 ?>
