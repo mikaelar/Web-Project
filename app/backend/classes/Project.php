@@ -1,6 +1,7 @@
 <?php
 namespace App\Backend\Classes;
 
+use App\Backend\Classes\Notifier;
 use App\Backend\Classes\Database;
 
 class Project {
@@ -24,10 +25,12 @@ class Project {
     public function create() {
         $stmt = $this->conn->prepare("INSERT INTO projects (name, description, collaborators, initial_requirements) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $this->name, $this->description, $this->collaborators, $this->initial_requirements);
-
+       
         if ($stmt->execute()) {
+            $project_id = $stmt->insert_id; // Вземете последно въведеният ID на проекта
+    
             $stmt->close();
-            return true;
+            return $project_id; // Връщаме ID на създадения проект
         } else {
             echo "Error: " . $stmt->error;
             $stmt->close();
