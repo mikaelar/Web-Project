@@ -1,6 +1,7 @@
 <?php
 namespace App\Backend\Classes;
 
+use App\Backend\Classes\Notifier;
 use App\Backend\Classes\Database;
 
 class Project {
@@ -100,8 +101,10 @@ class Project {
         $stmt->bind_param("si", $collaboratorFN, $this->id);
 
         if ($stmt->execute()) {
+            $project_id = $stmt->insert_id; // Вземете последно въведеният ID на проекта
+    
             $stmt->close();
-            return true;
+            return $project_id; // Връщаме ID на създадения проект
         } else {
             echo "Error: " . $stmt->error;
             $stmt->close();

@@ -53,6 +53,8 @@ class Notifier {
     // check if it works for multiple people
     public function getNotifications() {
         $query = "SELECT id, message, date FROM notifications WHERE id IN (SELECT notifications_id FROM notifications_for_users WHERE users_facultyNum = ?)";
+        $stmt = $this->conn->prepare("SELECT id, project_id, message FROM notifications WHERE is_read = 0");
+        // combine queries
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param('s', $this->facultyNum);
         $stmt->execute();

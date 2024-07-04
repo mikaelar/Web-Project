@@ -80,6 +80,7 @@ $notifications = $notifier->getNotifications();
                         <?php foreach ($notifications as $notification): ?>
                             <li>
                                 <?php echo htmlspecialchars($notification['message']); ?>
+                                <a href="../../frontend/project_details/project_details.php?id=<?php echo $notification['project_id']; ?>">View Project</a>
                                 <a href="../../backend/scripts/mark_as_read.php?id=<?php echo $notification['id']; ?>">Mark as read</a>
                             </li>
                         <?php endforeach; ?>
