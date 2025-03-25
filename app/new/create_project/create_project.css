@@ -1,0 +1,120 @@
+/* Create Project CSS */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #d6f5d6;  /* Pale mint green background */
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #20113f;
+    color: white;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left h1 {
+    font-size: 3em;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+#username {
+    margin-right: 20px;
+    font-size: 1.2em;
+}
+
+.header-right button {
+    background-color: #709783;
+    color: rgb(0, 0, 0);
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.header-right button:hover {
+    opacity: 0.8;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+form {
+    background: #caa9d7;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+input[type="text"], textarea, select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+button {
+    background-color: #709783;
+    color: rgb(0, 0, 0);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+footer {
+    background-color: #20113f;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
