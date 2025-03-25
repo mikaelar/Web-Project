@@ -1,0 +1,91 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f7; /* Цветът на фона от главната страница */
+    color: #333; /* Общ цвят на текста */
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #61dafb; /* Цветът на заглавката от главната страница */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+}
+
+.header-left h1 {
+    font-size: 2em; /* Размер на заглавието */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Ефект на сянка на текста */
+    cursor: pointer;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white; /* Цвят на текста в навигацията */
+    text-decoration: none;
+    font-size: 1.2em; /* Размер на текста в навигацията */
+}
+
+nav ul li a:hover {
+    background-color: #21a1f1; /* Цвят при навърхване */
+    transform: scale(1.1); /* Ефект на уголемяване при навърхване */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+#username {
+    margin-right: 20px;
+    font-size: 1.2em; /* Размер на текста за потребителското име */
+}
+
+.header-right button {
+    background-color: #21a1f1; /* Цветът на бутоните от главната страница */
+    color: white;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.header-right button:hover {
+    background-color: #0074d9; /* Цвят при навърхване на бутоните */
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+form {
+    background: #ffffff; /* Цветът на фона на формите */
+    border: 1px solid #ddd; /* Бордюр на формите */
+    border-radius: 10px; /* Закръглени ъгли на формите */
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Сянка на формите */
+    margin-bottom: 20px;
+}
+
+input[type="text"], textarea, select {
+    width: 100%;
+    

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Project - Software Requirements Management</title>
+    <link rel="stylesheet" href="create_project.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>Software Requirements Management</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../main/main.php">Home</a></li>
+                <li><a href="../create_project/create_project.html">Add Project</a></li>
+                <li><a href="../projects/Projects.html" target="_blank">Projects</a></li>
+                <li><a href="../settings/settings.html">Settings</a></li>
+                <li><a href="../user_stories/UserStories.html">Manage User Stories</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <span id="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            <div class="dropdown">
+                <button id="notificationButton" class="notification-btn">🔔 Notifications (3)</button>
+                <div id="notificationList" class="dropdown-content">
+                    
+                </div>
+            </div>
+            <button id="logoutButton" onclick="location.href='../login_register/logout.php';">Logout</button>
+        </div>
+    </header>
+
+    <form action="create_project.php" method="POST">
+        <h2>Създаване на проект</h2>
+        <div class="form-group">
+            <input type="text" id="name" name="name" required>
+            <span class="balloon">Име на проекта</span>
+        </div>
+        
+        <div class="form-group">
+            <textarea id="description" name="description" rows="4" required></textarea>
+            <span class="balloon">Кратко описание</span>
+        </div>
+        
+        <div class="form-group">
+            <input type="text" id="collaborators" name="collaborators" required>
+            <span class="balloon">Колаборатори</span>
+        </div>
+        
+        <div class="form-group">
+            <textarea id="initial_requirements" name="initial_requirements" rows="6"></textarea>
+            <span class="balloon">Изисквания</span>
+        </div>
+        
+        <button type="submit">Създай проект</button>
+    </form>
+
+    <footer>
+        <p>&copy; 2024 Software Requirements Management. All rights reserved.</p>
+    </footer>
+</body>
+</html>
